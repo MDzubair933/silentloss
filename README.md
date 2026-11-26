@@ -6,7 +6,7 @@
 
 An evidence-driven AWS reliability experiment that transforms agent-led architectural guidance into measurable distributed-system reliability improvement.
 
-**[Explore Live Dashboard](https://mdzubair933.github.io/silentloss/)** &nbsp;&middot;&nbsp; **[Watch Technical Demo](https://mdzubair933.github.io/silentloss/demo-video.html)** &nbsp;&middot;&nbsp; **[Explore Source & Evidence](#repository-structure)**
+**[Explore Live Dashboard](https://mdzubair933.github.io/silentloss/)** &nbsp;&middot;&nbsp; **[Watch Technical Demo](https://mdzubair933.github.io/silentloss/demo-video.html)** &nbsp;&middot;&nbsp; **[Watch on YouTube](https://www.youtube.com/watch?v=awVoBcu6k2A)** &nbsp;&middot;&nbsp; **[Explore Source & Evidence](#repository-structure)**
 
 <br />
 
@@ -52,7 +52,7 @@ Watch the technical walkthrough covering the original failure, the Agent Toolkit
 <p align="center">
   <strong><a href="https://mdzubair933.github.io/silentloss/demo-video.html">Watch Technical Demo (02:50)</a></strong>
   &nbsp;&nbsp;|&nbsp;&nbsp;
-  <a href="https://youtu.be/awVoBcu6k2A">Watch on YouTube</a>
+  <a href="https://www.youtube.com/watch?v=awVoBcu6k2A">Watch on YouTube</a>
   &nbsp;&nbsp;|&nbsp;&nbsp;
   <a href="https://mdzubair933.github.io/silentloss/">Open Live Reliability Lab</a>
 </p>
@@ -287,7 +287,7 @@ SilentLoss demonstrates how agent-led architectural guidance can be converted in
 
 - **Live Interactive Reliability Lab:** https://mdzubair933.github.io/silentloss/
 - **Dedicated Technical Demo Page:** https://mdzubair933.github.io/silentloss/demo-video.html
-- **YouTube Demonstration:** https://youtu.be/awVoBcu6k2A
+- **YouTube Demonstration:** https://www.youtube.com/watch?v=awVoBcu6k2A
 - **Source Code, Datasets & Reports:** https://github.com/MDzubair933/silentloss
 
 ## License
