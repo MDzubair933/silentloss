@@ -1,0 +1,4 @@
+# SilentLoss Production Lambda Dependencies
+# Note: boto3 and botocore are pre-installed in the AWS Lambda Python managed runtime.
+boto3>=1.34.0
+botocore>=1.34.0

@@ -1,0 +1,152 @@
+[
+  {
+    "claim": "Agent Toolkit Reliability review covered 63/63",
+    "evidence": "Original review, 17 numbered shards and preserved Phase 4 archive",
+    "status": "VERIFIED historical coverage",
+    "qualification": "Review coverage, not 63 controls passed, AWS certification, six-pillar review, or a corrected-revision rescore. No new review was run."
+  },
+  {
+    "claim": "F1 identified missing durable dispatch intent",
+    "evidence": "Original F1, baseline source and Phase 6 diff",
+    "status": "VERIFIED historical finding",
+    "qualification": "Attribute the recommendation to the official skill workflow, not an AWS human audit."
+  },
+  {
+    "claim": "Before C160/F150/U10; Corrected Live After C160/F160/U0",
+    "evidence": "Phase 5 Before exports (`bef26r1+bef26r2`) and Phase 9 corrected live exports (`fin26r1+fin26r2`, FINAL_BENCHMARK_RESULTS.json)",
+    "status": "VERIFIED corrected live deployment",
+    "qualification": "Historical Phase 7 run (`aft26r1+aft26r2`) also measured `C160/F160/U0`; both finite synthetic campaigns exclude `dlq_evidence_complete` (non-destructive SQS checks)."
+  },
+  {
+    "claim": "Observed loss fell 6.25% to 0%, fulfillment 93.75% to 100%",
+    "evidence": "Independent Phase 5 and Phase 9 C/F/U counts (combined_160_reconciliation.json)",
+    "status": "VERIFIED corrected live arithmetic",
+    "qualification": "Finite 160-order campaign improvement (`-6.25 pp` silent loss, `-25.00 pp` in `B-02`); not a universal zero-loss guarantee."
+  },
+  {
+    "claim": "Ten injected-timeout orders recovered through deployed corrected architecture",
+    "evidence": "Ten raw `fin26r1+fin26r2` outbox/relay/worker/correlation/message-ID joins (b02_recovery_traces.json)",
+    "status": "VERIFIED corrected live deployment",
+    "qualification": "All `10/10` `B-02` orders recovered via `dynamodb_stream`, persisted `send_attempts_reserved=1`, cleared `publication_uncertain=false`, and completed `FULFILLED` / `COMPLETED`."
+  },
+  {
+    "claim": "Timeout recovery completed in 1.667\u20132.800 seconds (avg 2.058s)",
+    "evidence": "Phase 9 raw `OutboxTable` `recovery_time_sec` values and relay logs (FINAL_BENCHMARK_RESULTS.json)",
+    "status": "VERIFIED corrected live deployment",
+    "qualification": "Measured from ingestion epoch through async SQS acknowledgement (`2` blocked pre-send attempts + `2s` backoff + pre-send reservation write), excluding cold-start smoke (`18.246s` in `finpref`). Historical Phase 7 range was `1.553\u20132.818s`."
+  },
+  {
+    "claim": "Zero duplicate completed business effects",
+    "evidence": "Distinct `COMPLETED` records in `FulfillmentTable`, `8` duplicate SQS deliveries + `16` API replays in campaign, plus `finpref` control (final_smoke_tests.json)",
+    "status": "VERIFIED corrected live deployment & tests",
+    "qualification": "Synthetic DynamoDB fulfillment transaction only (`max_fulfillments_per_order=1`); not external payment/shipment proof."
+  },
+  {
+    "claim": "Workloads and schedules matched across two seeds",
+    "evidence": "Normalized plans and hash-verified closed traces for `20261126` & `20261127` (`192` steps per campaign)",
+    "status": "VERIFIED live comparison",
+    "qualification": "Same `160` standard orders, `8` negative controls, `8` API replays, `8` SQS duplicate controls, concurrency `2`, and seeded fault indices across Before and Corrected After."
+  },
+  {
+    "claim": "Every frozen fault detail was identical",
+    "evidence": "Frozen protocol versus synchronous vs. asynchronous paths",
+    "status": "NOT SUPPORTED literally",
+    "qualification": "Disclose that Before returned HTTP `504` synchronously, whereas Corrected After returned `201/PENDING` and injected the same two timeout blocks asynchronously in `OutboxRelay`."
+  },
+  {
+    "claim": "Identical retry topology and hard 60-second deadline",
+    "evidence": "Protocol, harness convergence polling, corrected publisher code",
+    "status": "QUALIFIED",
+    "qualification": "Same client concurrency/deadlines; durable stream/sweeper retries and pre-send attempt reservations are architectural upgrades, and loop deadlines allow in-flight AWS scans to finish."
+  },
+  {
+    "claim": "484s to 138s proves proportional performance improvement",
+    "evidence": "Before vs. Corrected After wall-clock durations (`484s` vs `138.033s`)",
+    "status": "NOT SUPPORTED as throughput claim",
+    "qualification": "Before wall-clock included `60s` timeout polling waiting on stranded `B-02` orders; instead cite ingestion Lambda avg duration reduction (`71.28 ms` -> `37.88 ms`, `-46.9%`)."
+  },
+  {
+    "claim": "The system survived AWS service outages",
+    "evidence": "Application fault adapter (`SQS_INJECTED_TIMEOUT` / `SQS_INJECTED_503`)",
+    "status": "NOT SUPPORTED",
+    "qualification": "Faults simulate application-layer pre-send errors/timeouts, not live AWS SQS/DynamoDB service outages."
+  },
+  {
+    "claim": "Scheduled sweeper works live and missed-stream failover works",
+    "evidence": "Live CloudWatch confirmation on `ord_fin26r1__B-02_0009` (cwlogs_silentloss-outbox-sweeper-HackathonAfterExp.json) plus hermetic sweeper tests (test_f1_outbox.py)",
+    "status": "QUALIFIED (Live PENDING pick-up + Hermetic failover)",
+    "qualification": "EventBridge `OutboxRecoverySweeperFunction` confirmed healthy live `PENDING` record `ord_fin26r1__B-02_0009` (`0.474s`, `errors=0`, `D=0`). Intentional missed-stream and expired-lease crash recovery remain proven hermetically only."
+  },
+  {
+    "claim": "Outbox intent and event identity are atomic/stable",
+    "evidence": "Three-item DB transaction, UUIDv5 `event_id`, live `327:327:327` table parity",
+    "status": "VERIFIED corrected live deployment",
+    "qualification": "Guarantees atomic persistence of order + dispatch intent + stable `event_id`; external delivery stays at-least-once with consumer idempotency."
+  },
+  {
+    "claim": "Lost ack followed by AccessDenied no longer falsely fails the order",
+    "evidence": "original-probes.json and test_publication_correction.py",
+    "status": "VERIFIED hermetic behavior only",
+    "qualification": "Proven locally (stays `RETRY_WAIT`, `publication_uncertain=true`, worker still fulfills). Not injected against live AWS permissions."
+  },
+  {
+    "claim": "Uncertainty survives crashes and bounded retry exhaustion",
+    "evidence": "Pre-send conditional reservation live writes (`send_attempts_reserved=1` across `160/160` live orders) + hermetic crash/budget tests",
+    "status": "QUALIFIED (Reservation live; Exhaustion hermetic)",
+    "qualification": "Live deployment proved `send_attempts_reserved=1` & clearing `publication_uncertain=false` across all `160` orders; crash/budget exhaustion parking (`UNKNOWN`) verified hermetically only."
+  },
+  {
+    "claim": "Terminal transaction failure cannot be acknowledged as EXHAUSTED",
+    "evidence": "`TERMINAL_STATE_UNVERIFIED` consistent-reread tests in test_publication_correction.py",
+    "status": "VERIFIED hermetic behavior only",
+    "qualification": "Proven against simulated DDB timeout/conflict/readback faults locally; not reproduced via live AWS DDB fault injection."
+  },
+  {
+    "claim": "Pending/failed/completed accounting is bounded and determinate",
+    "evidence": "Collector tests + zero `UNKNOWN`/`EXHAUSTED` items across `327` live table records",
+    "status": "QUALIFIED",
+    "qualification": "`UNKNOWN` without fulfillment stays indeterminate (`I`); manual operator resolution is required if budget exhausts with uncertainty."
+  },
+  {
+    "claim": "109 hermetic tests pass for the corrected revision",
+    "evidence": "hermetic-tests.txt (`109 passed in 9.29s`)",
+    "status": "VERIFIED current local result",
+    "qualification": "Preserves all `94` earlier cases plus `15` targeted defect regressions; dummy credentials/blocked network."
+  },
+  {
+    "claim": "All historical manifests (166 Phase 6/7 entries) & corrected build hashes preserved",
+    "evidence": "`PHASE_6_7_EVIDENCE_MANIFEST.sha256`, `CORRECTED_REVISION_MANIFEST.sha256`, `FINAL_LIVE_EVIDENCE_MANIFEST.sha256`",
+    "status": "VERIFIED local integrity",
+    "qualification": "Historical Phase 6/7 and pre-deploy corrected source/build remain intact; this matrix updated in Phase 9 post-deployment (prior copy archived at PUBLICATION_CLAIMS_MATRIX_BEFORE_PHASE9.md)."
+  },
+  {
+    "claim": "Effective deployed IAM, ARM64 ZIP hashes & corrected live execution are verified",
+    "evidence": "post_cutover_verification.json",
+    "status": "VERIFIED live in AWS (`us-east-1`)",
+    "qualification": "Downloaded all 5 deployed Lambda ZIPs (`CodeSha256: u/Rb9bW20rQ5u848H4FE0v8mmpxZEOdPqDWxgOVigsk=`), verified `12/12` files match `.aws-sam/corrected-build/` (`outbox.py` `409a7309...`), confirmed `0` SQS permissions on ingestion roles, `0` wildcards, `0` managed policies."
+  },
+  {
+    "claim": "Ordinary callers cannot activate faults",
+    "evidence": "Live `finpref` smoke (`403` unsigned, `400` unknown fault, ordinary `/orders` ignoring fault header `201`)",
+    "status": "VERIFIED corrected live deployment",
+    "qualification": "Tested against live deployed ARM64 routes in `silentloss-remediated-exp`."
+  },
+  {
+    "claim": "Baseline stacks and historical live results were preserved",
+    "evidence": "`silentloss-baseline` & `silentloss-baseline-exp` CFN timestamps unchanged; `0` CloudWatch log events/invocations during Phase 9",
+    "status": "VERIFIED live isolation",
+    "qualification": "Zero baseline stack mutations and zero baseline traffic throughout Phase 9."
+  },
+  {
+    "claim": "Window gross modeled cost was \\$0.002112 Before vs \\$0.002901 Corrected Live After",
+    "evidence": "Before export vs Phase 9 metered CloudWatch metrics & DDB capacity (`3,128` WCU vs `1,432` Before; `$0.002528` USD historical Phase 7)",
+    "status": "QUALIFIED metered estimate",
+    "qualification": "Approximate gross on-demand spend before AWS Always-Free tier; Phase 9 delta (`+$0.000373` vs Phase 7) reflects extra pre-send uncertainty reservation WCUs + live campaign CloudWatch window."
+  },
+  {
+    "claim": "System guarantees universal zero loss across arbitrary failures",
+    "evidence": "Current scope & operating model",
+    "status": "NOT SUPPORTED",
+    "qualification": "Demonstrates `0.00%` loss under finite `160`-order synthetic fault campaign; parked `UNKNOWN` remains a deliberate bounded-budget stop requiring operator attention."
+  }
+]

@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 330" width="920" height="330">
+  <rect width="920" height="330" fill="#0B0D11" rx="12" />
+  <defs>
+    <marker id="bef-slate" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#7C8593" />
+    </marker>
+    <marker id="bef-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#58C9A3" />
+    </marker>
+    <marker id="bef-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#E1817B" />
+    </marker>
+  </defs>
+  <rect x="432" y="34" width="206" height="168" rx="10" fill="rgba(225, 129, 123, 0.06)" stroke="rgba(225, 129, 123, 0.45)" stroke-dasharray="5 4" />
+  <text x="535" y="56" text-anchor="middle" fill="#E1817B" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="600">Publication failure boundary</text>
+  <line x1="168" y1="115" x2="218" y2="115" stroke="#7C8593" stroke-width="1.8" marker-end="url(#bef-slate)" />
+  <line x1="305" y1="156" x2="305" y2="218" stroke="#58C9A3" stroke-width="2.2" marker-end="url(#bef-green)" />
+  <line x1="392" y1="115" x2="452" y2="115" stroke="#E1817B" stroke-width="2.2" stroke-dasharray="5 4" marker-end="url(#bef-red)" />
+  <line x1="616" y1="115" x2="676" y2="115" stroke="#7C8593" stroke-width="1.8" stroke-dasharray="4 4" marker-end="url(#bef-slate)" />
+  <line x1="762" y1="156" x2="762" y2="218" stroke="#7C8593" stroke-width="1.8" marker-end="url(#bef-slate)" />
+  <text x="322" y="193" fill="#58C9A3" font-family="Inter, system-ui, sans-serif" font-size="11.5" font-weight="500">1. Committed</text>
+  <text x="535" y="186" text-anchor="middle" fill="#E1817B" font-family="Inter, system-ui, sans-serif" font-size="11.5" font-weight="500">No outbox intent written</text>
+  <g>
+    <rect x="16" y="75" width="152" height="80" rx="10" fill="#171B22" stroke="#373E4A" stroke-width="1.5" />
+    <text x="92" y="109" text-anchor="middle" fill="#F3F4F6" font-family="Inter, system-ui, sans-serif" font-size="13.5" font-weight="600">API Gateway</text>
+    <text x="92" y="131" text-anchor="middle" fill="#A5ADB9" font-family="JetBrains Mono, monospace" font-size="11">SigV4 HTTP API</text>
+  </g>
+  <g>
+    <rect x="222" y="75" width="168" height="80" rx="10" fill="#171B22" stroke="#E7A34D" stroke-width="1.5" />
+    <text x="306" y="109" text-anchor="middle" fill="#F3F4F6" font-family="Inter, system-ui, sans-serif" font-size="13.5" font-weight="600">OrderService</text>
+    <text x="306" y="131" text-anchor="middle" fill="#A5ADB9" font-family="JetBrains Mono, monospace" font-size="11">Dual-write handler</text>
+  </g>
+  <g>
+    <rect x="222" y="222" width="168" height="80" rx="10" fill="#171B22" stroke="#58C9A3" stroke-width="1.5" />
+    <text x="306" y="256" text-anchor="middle" fill="#F3F4F6" font-family="Inter, system-ui, sans-serif" font-size="13.5" font-weight="600">DynamoDB Core</text>
+    <text x="306" y="278" text-anchor="middle" fill="#A5ADB9" font-family="JetBrains Mono, monospace" font-size="11">Orders + Idempotency</text>
+  </g>
+  <g>
+    <rect x="456" y="75" width="160" height="80" rx="10" fill="#171B22" stroke="#E1817B" stroke-width="1.5" />
+    <text x="536" y="109" text-anchor="middle" fill="#F3F4F6" font-family="Inter, system-ui, sans-serif" font-size="13.5" font-weight="600">Sync SendMessage</text>
+    <text x="536" y="131" text-anchor="middle" fill="#A5ADB9" font-family="JetBrains Mono, monospace" font-size="11">504 ReadTimeout -&gt; U=10</text>
+  </g>
+  <g>
+    <rect x="680" y="75" width="164" height="80" rx="10" fill="#171B22" stroke="#373E4A" stroke-width="1.5" />
+    <text x="762" y="109" text-anchor="middle" fill="#F3F4F6" font-family="Inter, system-ui, sans-serif" font-size="13.5" font-weight="600">Fulfillment SQS</text>
+    <text x="762" y="131" text-anchor="middle" fill="#A5ADB9" font-family="JetBrains Mono, monospace" font-size="11">Unreached on fault</text>
+  </g>
+  <g>
+    <rect x="680" y="222" width="164" height="80" rx="10" fill="#171B22" stroke="#373E4A" stroke-width="1.5" />
+    <text x="762" y="256" text-anchor="middle" fill="#F3F4F6" font-family="Inter, system-ui, sans-serif" font-size="13.5" font-weight="600">FulfillmentWorker</text>
+    <text x="762" y="278" text-anchor="middle" fill="#A5ADB9" font-family="JetBrains Mono, monospace" font-size="11">Idempotent update</text>
+  </g>
+</svg>

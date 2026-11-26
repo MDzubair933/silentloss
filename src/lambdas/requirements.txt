@@ -1,0 +1,3 @@
+# Lambda deployment package dependencies.
+# Uses Python managed runtime stdlib + AWS-provided boto3/botocore.
+# Zero third-party native dependencies required for baseline execution.

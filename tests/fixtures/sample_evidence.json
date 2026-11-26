@@ -1,0 +1,28 @@
+{
+  "committed_orders": {
+    "ord_001": {"status": "FULFILLED", "dispatch_status": "CONFIRMED"},
+    "ord_002": {"status": "FULFILLED", "dispatch_status": "CONFIRMED"},
+    "ord_003": {"status": "COMMITTED", "dispatch_status": "CONFIRMED"},
+    "ord_004": {"status": "COMMITTED", "dispatch_status": "CONFIRMED"},
+    "ord_005": {"status": "COMMITTED", "dispatch_status": "REJECTED"},
+    "ord_006": {"status": "COMMITTED", "dispatch_status": "UNKNOWN"}
+  },
+  "fulfillment_records": [
+    {"order_id": "ord_001", "fulfillment_id": "FULFILLMENT#PRIMARY", "status": "COMPLETED"},
+    {"order_id": "ord_002", "fulfillment_id": "FULFILLMENT#PRIMARY", "status": "COMPLETED"},
+    {"order_id": "ord_002", "fulfillment_id": "FULFILLMENT#PRIMARY", "status": "COMPLETED"}
+  ],
+  "pending_records": {
+    "ord_003": {"recoverable_path_verified": true, "age_seconds": 15}
+  },
+  "rejection_order_ids": ["ord_004"],
+  "source_completeness": {
+    "orders_table_complete": true,
+    "fulfillment_table_complete": true,
+    "dlq_evidence_complete": true,
+    "rejection_audit_complete": true,
+    "publication_logs_complete": true,
+    "pagination_complete": true,
+    "run_scope": "FIXTURE_DEMO"
+  }
+}

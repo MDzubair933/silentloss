@@ -1,0 +1,18 @@
+{
+  "captured_utc": "2026-11-26T12:40:57Z",
+  "queue_name": "silentloss-fulfillment-queue-HackathonAfterExp",
+  "dlq_name": "silentloss-fulfillment-dlq-HackathonAfterExp",
+  "queue_attributes": {
+    "ApproximateNumberOfMessages": "0",
+    "ApproximateNumberOfMessagesNotVisible": "0",
+    "ApproximateNumberOfMessagesDelayed": "0",
+    "VisibilityTimeout": "180",
+    "MessageRetentionPeriod": "86400"
+  },
+  "dlq_attributes": {
+    "ApproximateNumberOfMessages": "0",
+    "ApproximateNumberOfMessagesNotVisible": "0",
+    "MessageRetentionPeriod": "259200"
+  },
+  "appears_quiescent": true
+}

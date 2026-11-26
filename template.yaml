@@ -1,0 +1,796 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: SilentLoss F1 remediated order processing with durable DynamoDB Transactional Outbox and recoverable asynchronous publishing.
+Parameters:
+  Environment:
+    Type: String
+    Default: HackathonAfter
+    Description: Isolated environment stage name
+  LogLevel:
+    Type: String
+    Default: INFO
+    AllowedValues:
+    - DEBUG
+    - INFO
+    - WARN
+    - ERROR
+    Description: Structured logging level
+  LambdaRuntime:
+    Type: String
+    Default: python3.14
+    AllowedValues:
+    - python3.14
+    - python3.13
+    - python3.12
+    Description: Supported managed Python Lambda runtime
+  EnableFaultAdapter:
+    Type: String
+    Default: 'false'
+    AllowedValues:
+    - 'true'
+    - 'false'
+    Description: 'Isolated benchmark fault adapter toggle. Must remain false in normal operation; only enabled in isolated benchmark stacks for controlled publication fault testing.'
+  BenchmarkControllerArn:
+    Type: String
+    Default: ''
+    Description: Exact IAM user or STS session ARN permitted to use the isolated experiment route.
+Globals:
+  Function:
+    Timeout: 10
+    MemorySize: 256
+    Architectures:
+    - arm64
+    Runtime:
+      Ref: LambdaRuntime
+    Environment:
+      Variables:
+        LOG_LEVEL:
+          Ref: LogLevel
+        ENVIRONMENT:
+          Ref: Environment
+    Tags:
+      Project: SilentLoss
+      Environment:
+        Ref: Environment
+      Owner: MdZubair
+      ManagedBy: AWS-SAM
+Resources:
+  OrdersTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName:
+        Fn::Sub: silentloss-orders-${Environment}
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+      - AttributeName: order_id
+        AttributeType: S
+      KeySchema:
+      - AttributeName: order_id
+        KeyType: HASH
+      SSESpecification:
+        SSEEnabled: true
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: false
+      Tags:
+      - Key: Project
+        Value: SilentLoss
+      - Key: Environment
+        Value:
+          Ref: Environment
+  IdempotencyTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName:
+        Fn::Sub: silentloss-idempotency-${Environment}
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+      - AttributeName: idempotency_key
+        AttributeType: S
+      KeySchema:
+      - AttributeName: idempotency_key
+        KeyType: HASH
+      SSESpecification:
+        SSEEnabled: true
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: false
+      Tags:
+      - Key: Project
+        Value: SilentLoss
+      - Key: Environment
+        Value:
+          Ref: Environment
+  OutboxTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName:
+        Fn::Sub: silentloss-outbox-${Environment}
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+      - AttributeName: outbox_id
+        AttributeType: S
+      - AttributeName: dispatch_state
+        AttributeType: S
+      - AttributeName: next_attempt_at
+        AttributeType: N
+      KeySchema:
+      - AttributeName: outbox_id
+        KeyType: HASH
+      GlobalSecondaryIndexes:
+      - IndexName: DispatchStateIndex
+        KeySchema:
+        - AttributeName: dispatch_state
+          KeyType: HASH
+        - AttributeName: next_attempt_at
+          KeyType: RANGE
+        Projection:
+          ProjectionType: ALL
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
+      SSESpecification:
+        SSEEnabled: true
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: false
+      Tags:
+      - Key: Project
+        Value: SilentLoss
+      - Key: Environment
+        Value:
+          Ref: Environment
+  FulfillmentTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName:
+        Fn::Sub: silentloss-fulfillment-${Environment}
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+      - AttributeName: order_id
+        AttributeType: S
+      - AttributeName: fulfillment_id
+        AttributeType: S
+      KeySchema:
+      - AttributeName: order_id
+        KeyType: HASH
+      - AttributeName: fulfillment_id
+        KeyType: RANGE
+      SSESpecification:
+        SSEEnabled: true
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: false
+      Tags:
+      - Key: Project
+        Value: SilentLoss
+      - Key: Environment
+        Value:
+          Ref: Environment
+  RejectionAuditTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName:
+        Fn::Sub: silentloss-rejections-${Environment}
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+      - AttributeName: rejection_id
+        AttributeType: S
+      KeySchema:
+      - AttributeName: rejection_id
+        KeyType: HASH
+      SSESpecification:
+        SSEEnabled: true
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: false
+      Tags:
+      - Key: Project
+        Value: SilentLoss
+      - Key: Environment
+        Value:
+          Ref: Environment
+  FulfillmentDLQ:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName:
+        Fn::Sub: silentloss-fulfillment-dlq-${Environment}
+      MessageRetentionPeriod: 259200
+      SqsManagedSseEnabled: true
+      Tags:
+      - Key: Project
+        Value: SilentLoss
+      - Key: Environment
+        Value:
+          Ref: Environment
+  OrderFulfillmentQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName:
+        Fn::Sub: silentloss-fulfillment-queue-${Environment}
+      VisibilityTimeout: 180
+      MessageRetentionPeriod: 86400
+      SqsManagedSseEnabled: true
+      RedrivePolicy:
+        deadLetterTargetArn:
+          Fn::GetAtt:
+          - FulfillmentDLQ
+          - Arn
+        maxReceiveCount: 3
+      Tags:
+      - Key: Project
+        Value: SilentLoss
+      - Key: Environment
+        Value:
+          Ref: Environment
+  HttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      Name:
+        Fn::Sub: silentloss-api-${Environment}
+      Auth:
+        EnableIamAuthorizer: true
+      Tags:
+        Project: SilentLoss
+        Environment:
+          Ref: Environment
+  OrderServiceFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName:
+        Fn::Sub: silentloss-order-service-${Environment}
+      CodeUri: src/lambdas/
+      Handler: handlers.order_service.handler
+      Environment:
+        Variables:
+          ORDERS_TABLE_NAME:
+            Ref: OrdersTable
+          IDEMPOTENCY_TABLE_NAME:
+            Ref: IdempotencyTable
+          OUTBOX_TABLE_NAME:
+            Ref: OutboxTable
+          FULFILLMENT_TABLE_NAME:
+            Ref: FulfillmentTable
+          ENABLE_BENCHMARK_FAULT_ADAPTER: 'false'
+      Events:
+        CreateOrder:
+          Type: HttpApi
+          Properties:
+            ApiId:
+              Ref: HttpApi
+            Path: /orders
+            Method: POST
+            Auth:
+              Authorizer: AWS_IAM
+        GetOrder:
+          Type: HttpApi
+          Properties:
+            ApiId:
+              Ref: HttpApi
+            Path: /orders/{order_id}
+            Method: GET
+            Auth:
+              Authorizer: AWS_IAM
+      Role:
+        Fn::GetAtt:
+        - OrderServiceRole
+        - Arn
+    DependsOn: OrderServiceLogGroup
+  OrderServiceLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName:
+        Fn::Sub: /aws/lambda/silentloss-order-service-${Environment}
+      RetentionInDays: 7
+  OutboxRelayFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName:
+        Fn::Sub: silentloss-outbox-relay-${Environment}
+      CodeUri: src/lambdas/
+      Handler: handlers.outbox_relay.handler
+      Timeout: 30
+      Environment:
+        Variables:
+          ORDERS_TABLE_NAME:
+            Ref: OrdersTable
+          OUTBOX_TABLE_NAME:
+            Ref: OutboxTable
+          FULFILLMENT_QUEUE_URL:
+            Ref: OrderFulfillmentQueue
+          ENABLE_BENCHMARK_FAULT_ADAPTER:
+            Ref: EnableFaultAdapter
+      Role:
+        Fn::GetAtt:
+        - OutboxRelayRole
+        - Arn
+    DependsOn: OutboxRelayLogGroup
+  OutboxRelayLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName:
+        Fn::Sub: /aws/lambda/silentloss-outbox-relay-${Environment}
+      RetentionInDays: 7
+  OutboxStreamMapping:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      EventSourceArn:
+        Fn::GetAtt:
+        - OutboxTable
+        - StreamArn
+      FunctionName:
+        Ref: OutboxRelayFunction
+      StartingPosition: LATEST
+      BatchSize: 5
+      MaximumBatchingWindowInSeconds: 0
+      ParallelizationFactor: 1
+      MaximumRetryAttempts: 2
+      MaximumRecordAgeInSeconds: 300
+      BisectBatchOnFunctionError: true
+      FunctionResponseTypes:
+      - ReportBatchItemFailures
+      FilterCriteria:
+        Filters:
+        - Pattern: '{"eventName": ["INSERT"]}'
+    DependsOn: OutboxRelayRole
+  OutboxRecoverySweeperFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName:
+        Fn::Sub: silentloss-outbox-sweeper-${Environment}
+      CodeUri: src/lambdas/
+      Handler: handlers.outbox_sweeper.handler
+      Timeout: 30
+      Environment:
+        Variables:
+          ORDERS_TABLE_NAME:
+            Ref: OrdersTable
+          OUTBOX_TABLE_NAME:
+            Ref: OutboxTable
+          OUTBOX_STATE_INDEX_NAME: DispatchStateIndex
+          FULFILLMENT_QUEUE_URL:
+            Ref: OrderFulfillmentQueue
+          ENABLE_BENCHMARK_FAULT_ADAPTER:
+            Ref: EnableFaultAdapter
+      Role:
+        Fn::GetAtt:
+        - OutboxRecoverySweeperRole
+        - Arn
+    DependsOn: OutboxRecoverySweeperLogGroup
+  OutboxRecoverySweeperLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName:
+        Fn::Sub: /aws/lambda/silentloss-outbox-sweeper-${Environment}
+      RetentionInDays: 7
+  OutboxRecoveryScheduleRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name:
+        Fn::Sub: silentloss-outbox-sweeper-schedule-${Environment}
+      ScheduleExpression: rate(1 minute)
+      State: ENABLED
+      Targets:
+      - Id: OutboxRecoverySweeperTarget
+        Arn:
+          Fn::GetAtt:
+          - OutboxRecoverySweeperFunction
+          - Arn
+  OutboxRecoverySchedulePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName:
+        Ref: OutboxRecoverySweeperFunction
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn:
+        Fn::GetAtt:
+        - OutboxRecoveryScheduleRule
+        - Arn
+  FulfillmentWorkerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName:
+        Fn::Sub: silentloss-fulfillment-worker-${Environment}
+      CodeUri: src/lambdas/
+      Handler: handlers.fulfillment_worker.handler
+      Timeout: 30
+      Environment:
+        Variables:
+          ORDERS_TABLE_NAME:
+            Ref: OrdersTable
+          FULFILLMENT_TABLE_NAME:
+            Ref: FulfillmentTable
+          REJECTION_AUDIT_TABLE_NAME:
+            Ref: RejectionAuditTable
+      Events:
+        SQSEvent:
+          Type: SQS
+          Properties:
+            Queue:
+              Fn::GetAtt:
+              - OrderFulfillmentQueue
+              - Arn
+            BatchSize: 5
+            ScalingConfig:
+              MaximumConcurrency: 2
+            FunctionResponseTypes:
+            - ReportBatchItemFailures
+      Role:
+        Fn::GetAtt:
+        - FulfillmentWorkerRole
+        - Arn
+    DependsOn: FulfillmentWorkerLogGroup
+  FulfillmentWorkerLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName:
+        Fn::Sub: /aws/lambda/silentloss-fulfillment-worker-${Environment}
+      RetentionInDays: 7
+  OrderServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service: lambda.amazonaws.com
+          Action: sts:AssumeRole
+      Policies:
+      - PolicyName: RuntimeOperations
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:ConditionCheckItem
+            Resource:
+            - Fn::GetAtt:
+              - OrdersTable
+              - Arn
+            - Fn::GetAtt:
+              - IdempotencyTable
+              - Arn
+          - Effect: Allow
+            Action:
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:ConditionCheckItem
+            Resource:
+            - Fn::GetAtt:
+              - OutboxTable
+              - Arn
+          - Effect: Allow
+            Action:
+            - dynamodb:GetItem
+            - dynamodb:Query
+            Resource:
+            - Fn::GetAtt:
+              - FulfillmentTable
+              - Arn
+          - Effect: Allow
+            Action:
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+            Resource:
+              Fn::Sub: arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/silentloss-order-service-${Environment}:*
+  OutboxRelayRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service: lambda.amazonaws.com
+          Action: sts:AssumeRole
+      Policies:
+      - PolicyName: RuntimeOperations
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - dynamodb:DescribeStream
+            - dynamodb:GetRecords
+            - dynamodb:GetShardIterator
+            - dynamodb:ListStreams
+            Resource:
+            - Fn::GetAtt:
+              - OutboxTable
+              - StreamArn
+          - Effect: Allow
+            Action:
+            - dynamodb:GetItem
+            - dynamodb:UpdateItem
+            - dynamodb:ConditionCheckItem
+            Resource:
+            - Fn::GetAtt:
+              - OutboxTable
+              - Arn
+            - Fn::GetAtt:
+              - OrdersTable
+              - Arn
+          - Effect: Allow
+            Action:
+            - sqs:SendMessage
+            Resource:
+            - Fn::GetAtt:
+              - OrderFulfillmentQueue
+              - Arn
+          - Effect: Allow
+            Action:
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+            Resource:
+              Fn::Sub: arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/silentloss-outbox-relay-${Environment}:*
+  OutboxRecoverySweeperRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service: lambda.amazonaws.com
+          Action: sts:AssumeRole
+      Policies:
+      - PolicyName: RuntimeOperations
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - dynamodb:Query
+            Resource:
+            - Fn::Sub: ${OutboxTable.Arn}/index/DispatchStateIndex
+          - Effect: Allow
+            Action:
+            - dynamodb:GetItem
+            - dynamodb:UpdateItem
+            - dynamodb:ConditionCheckItem
+            Resource:
+            - Fn::GetAtt:
+              - OutboxTable
+              - Arn
+            - Fn::GetAtt:
+              - OrdersTable
+              - Arn
+          - Effect: Allow
+            Action:
+            - sqs:SendMessage
+            Resource:
+            - Fn::GetAtt:
+              - OrderFulfillmentQueue
+              - Arn
+          - Effect: Allow
+            Action:
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+            Resource:
+              Fn::Sub: arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/silentloss-outbox-sweeper-${Environment}:*
+  FulfillmentWorkerRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service: lambda.amazonaws.com
+          Action: sts:AssumeRole
+      Policies:
+      - PolicyName: RuntimeOperations
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - sqs:ReceiveMessage
+            - sqs:DeleteMessage
+            - sqs:GetQueueAttributes
+            Resource:
+            - Fn::GetAtt:
+              - OrderFulfillmentQueue
+              - Arn
+          - Effect: Allow
+            Action:
+            - dynamodb:GetItem
+            - dynamodb:UpdateItem
+            - dynamodb:ConditionCheckItem
+            Resource:
+            - Fn::GetAtt:
+              - OrdersTable
+              - Arn
+          - Effect: Allow
+            Action:
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:ConditionCheckItem
+            Resource:
+            - Fn::GetAtt:
+              - FulfillmentTable
+              - Arn
+          - Effect: Allow
+            Action:
+            - dynamodb:PutItem
+            Resource:
+            - Fn::GetAtt:
+              - RejectionAuditTable
+              - Arn
+          - Effect: Allow
+            Action:
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+            Resource:
+              Fn::Sub: arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/silentloss-fulfillment-worker-${Environment}:*
+  ExperimentOrderServiceFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName:
+        Fn::Sub: silentloss-experiment-service-${Environment}
+      CodeUri: src/lambdas/
+      Handler: handlers.order_service.handler
+      Environment:
+        Variables:
+          ORDERS_TABLE_NAME:
+            Ref: OrdersTable
+          IDEMPOTENCY_TABLE_NAME:
+            Ref: IdempotencyTable
+          OUTBOX_TABLE_NAME:
+            Ref: OutboxTable
+          FULFILLMENT_TABLE_NAME:
+            Ref: FulfillmentTable
+          ENABLE_BENCHMARK_FAULT_ADAPTER: 'true'
+          BENCHMARK_CONTROLLER_ARN:
+            Ref: BenchmarkControllerArn
+      Events:
+        ExperimentalOrder:
+          Type: HttpApi
+          Properties:
+            ApiId:
+              Ref: HttpApi
+            Path: /experiments/orders
+            Method: POST
+            Auth:
+              Authorizer: AWS_IAM
+      Role:
+        Fn::GetAtt:
+        - ExperimentServiceRole
+        - Arn
+    DependsOn: ExperimentServiceLogGroup
+    Condition: ExperimentsEnabled
+  ExperimentServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service: lambda.amazonaws.com
+          Action: sts:AssumeRole
+      Policies:
+      - PolicyName: RuntimeOperations
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:ConditionCheckItem
+            Resource:
+            - Fn::GetAtt:
+              - OrdersTable
+              - Arn
+            - Fn::GetAtt:
+              - IdempotencyTable
+              - Arn
+          - Effect: Allow
+            Action:
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:ConditionCheckItem
+            Resource:
+            - Fn::GetAtt:
+              - OutboxTable
+              - Arn
+          - Effect: Allow
+            Action:
+            - dynamodb:GetItem
+            - dynamodb:Query
+            Resource:
+            - Fn::GetAtt:
+              - FulfillmentTable
+              - Arn
+          - Effect: Allow
+            Action:
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+            Resource:
+              Fn::Sub: arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/silentloss-experiment-service-${Environment}:*
+    Condition: ExperimentsEnabled
+  ExperimentServiceLogGroup:
+    Type: AWS::Logs::LogGroup
+    Condition: ExperimentsEnabled
+    Properties:
+      LogGroupName:
+        Fn::Sub: /aws/lambda/silentloss-experiment-service-${Environment}
+      RetentionInDays: 7
+Outputs:
+  HttpApiUrl:
+    Description: IAM-authenticated HTTP API Gateway endpoint URL
+    Value:
+      Fn::Sub: https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com
+  InvokeApiResourceArn:
+    Description: Scoped execute-api ARN pattern for ordinary application callers
+    Value:
+      Fn::Sub: arn:${AWS::Partition}:execute-api:${AWS::Region}:${AWS::AccountId}:${HttpApi}/*/*/orders*
+  OrdersTableName:
+    Description: Orders DynamoDB Table
+    Value:
+      Ref: OrdersTable
+  IdempotencyTableName:
+    Description: Idempotency Lock DynamoDB Table
+    Value:
+      Ref: IdempotencyTable
+  OutboxTableName:
+    Description: Durable Transactional Outbox DynamoDB Table
+    Value:
+      Ref: OutboxTable
+  OutboxStreamArn:
+    Description: DynamoDB Stream ARN on OutboxTable
+    Value:
+      Fn::GetAtt:
+      - OutboxTable
+      - StreamArn
+  FulfillmentTableName:
+    Description: Fulfillment DynamoDB Table
+    Value:
+      Ref: FulfillmentTable
+  RejectionAuditTableName:
+    Description: Sanitized Permanent Rejection Audit Table
+    Value:
+      Ref: RejectionAuditTable
+  FulfillmentQueueUrl:
+    Description: SQS Fulfillment Queue URL
+    Value:
+      Ref: OrderFulfillmentQueue
+  FulfillmentDLQUrl:
+    Description: SQS Dead-Letter Queue URL
+    Value:
+      Ref: FulfillmentDLQ
+  ExperimentInvokeArn:
+    Condition: ExperimentsEnabled
+    Value:
+      Fn::Sub: arn:${AWS::Partition}:execute-api:${AWS::Region}:${AWS::AccountId}:${HttpApi}/*/POST/experiments/orders
+    Description: Separate experiment permission; ordinary /orders invoke permission does not match.
+  DuplicateControlQueueArn:
+    Value:
+      Fn::GetAtt:
+      - OrderFulfillmentQueue
+      - Arn
+    Description: Explicit SendMessage permission required only for authorized duplicate-event controls.
+Conditions:
+  ExperimentsEnabled:
+    Fn::And:
+    - Fn::Equals:
+      - Ref: EnableFaultAdapter
+      - 'true'
+    - Fn::Not:
+      - Fn::Equals:
+        - Ref: BenchmarkControllerArn
+        - ''
+Rules:
+  ControllerRequiredForExperiments:
+    Assertions:
+    - Assert:
+        Fn::Or:
+        - Fn::Equals:
+          - Ref: EnableFaultAdapter
+          - 'false'
+        - Fn::Not:
+          - Fn::Equals:
+            - Ref: BenchmarkControllerArn
+            - ''
+      AssertDescription: Enabling experiments requires an exact controller ARN.

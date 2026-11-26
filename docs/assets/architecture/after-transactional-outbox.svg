@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 390" width="980" height="390">
+  <rect width="980" height="390" fill="#0B0D11" rx="12" />
+  <defs>
+    <marker id="aft-slate" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#7C8593" />
+    </marker>
+    <marker id="aft-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#58C9A3" />
+    </marker>
+    <marker id="aft-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#E7A34D" />
+    </marker>
+  </defs>
+  <rect x="196" y="34" width="206" height="274" rx="12" fill="rgba(88, 201, 163, 0.04)" stroke="rgba(88, 201, 163, 0.35)" stroke-dasharray="4 4" />
+  <text x="299" y="54" text-anchor="middle" fill="#58C9A3" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="600">Atomic ingestion boundary</text>
+  <line x1="158" y1="108" x2="210" y2="108" stroke="#7C8593" stroke-width="1.8" marker-end="url(#aft-slate)" />
+  <line x1="299" y1="148" x2="299" y2="206" stroke="#58C9A3" stroke-width="2.2" marker-end="url(#aft-green)" />
+  <path d="M 388 242 L 434 242 L 434 114 L 466 114" fill="none" stroke="#58C9A3" stroke-width="2.4" marker-end="url(#aft-green)" />
+  <path d="M 388 262 L 434 262 L 434 316 L 466 316" fill="none" stroke="#E7A34D" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#aft-amber)" />
+  <path d="M 634 114 L 664 114 L 664 195 L 686 195" fill="none" stroke="#58C9A3" stroke-width="2.2" marker-end="url(#aft-green)" />
+  <path d="M 634 316 L 664 316 L 664 235 L 686 235" fill="none" stroke="#E7A34D" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#aft-amber)" />
+  <line x1="846" y1="215" x2="866" y2="215" stroke="#58C9A3" stroke-width="2.2" marker-end="url(#aft-green)" />
+  <text x="550" y="60" text-anchor="middle" fill="#58C9A3" font-family="Inter, system-ui, sans-serif" font-size="11.5" font-weight="600">Fast path: DynamoDB Streams</text>
+  <text x="550" y="374" text-anchor="middle" fill="#E7A34D" font-family="Inter, system-ui, sans-serif" font-size="11.5" font-weight="600">Safety net: EventBridge 1-min sweeper</text>
+  <g>
+    <rect x="16" y="68" width="142" height="80" rx="10" fill="#171B22" stroke="#373E4A" stroke-width="1.5" />
+    <text x="87" y="102" text-anchor="middle" fill="#F3F4F6" font-family="Inter, system-ui, sans-serif" font-size="13.5" font-weight="600">API Gateway</text>
+    <text x="87" y="124" text-anchor="middle" fill="#A5ADB9" font-family="JetBrains Mono, monospace" font-size="11">SigV4 HTTP API</text>
+  </g>
+  <g>
+    <rect x="214" y="68" width="170" height="80" rx="10" fill="#171B22" stroke="#58C9A3" stroke-width="1.5" />
+    <text x="299" y="102" text-anchor="middle" fill="#F3F4F6" font-family="Inter, system-ui, sans-serif" font-size="13.5" font-weight="600">OrderService</text>
+    <text x="299" y="124" text-anchor="middle" fill="#A5ADB9" font-family="JetBrains Mono, monospace" font-size="11">0 SQS grants (201)</text>
+  </g>
+  <g>
+    <rect x="210" y="210" width="178" height="84" rx="10" fill="#171B22" stroke="#58C9A3" stroke-width="1.5" />
+    <text x="299" y="244" text-anchor="middle" fill="#F3F4F6" font-family="Inter, system-ui, sans-serif" font-size="13.5" font-weight="600">3-Table Atomic TX</text>
+    <text x="299" y="266" text-anchor="middle" fill="#A5ADB9" font-family="JetBrains Mono, monospace" font-size="11">Orders+Idemp+Outbox</text>
+  </g>
+  <g>
+    <rect x="470" y="74" width="164" height="80" rx="10" fill="#171B22" stroke="#58C9A3" stroke-width="1.5" />
+    <text x="552" y="108" text-anchor="middle" fill="#F3F4F6" font-family="Inter, system-ui, sans-serif" font-size="13.5" font-weight="600">OutboxRelay</text>
+    <text x="552" y="130" text-anchor="middle" fill="#A5ADB9" font-family="JetBrains Mono, monospace" font-size="11">Stream INSERT ESM</text>
+  </g>
+  <g>
+    <rect x="470" y="276" width="164" height="80" rx="10" fill="#171B22" stroke="#E7A34D" stroke-width="1.5" />
+    <text x="552" y="310" text-anchor="middle" fill="#F3F4F6" font-family="Inter, system-ui, sans-serif" font-size="13.5" font-weight="600">RecoverySweeper</text>
+    <text x="552" y="332" text-anchor="middle" fill="#A5ADB9" font-family="JetBrains Mono, monospace" font-size="11">DispatchStateIndex</text>
+  </g>
+  <g>
+    <rect x="690" y="174" width="156" height="82" rx="10" fill="#171B22" stroke="#E7A34D" stroke-width="1.5" />
+    <text x="768" y="208" text-anchor="middle" fill="#F3F4F6" font-family="Inter, system-ui, sans-serif" font-size="13.5" font-weight="600">Lease Publisher</text>
+    <text x="768" y="230" text-anchor="middle" fill="#A5ADB9" font-family="JetBrains Mono, monospace" font-size="11">Pre-send lock + SQS</text>
+  </g>
+  <g>
+    <rect x="870" y="174" width="96" height="82" rx="10" fill="#171B22" stroke="#58C9A3" stroke-width="1.5" />
+    <text x="918" y="208" text-anchor="middle" fill="#F3F4F6" font-family="Inter, system-ui, sans-serif" font-size="13.5" font-weight="600">Worker</text>
+    <text x="918" y="230" text-anchor="middle" fill="#A5ADB9" font-family="JetBrains Mono, monospace" font-size="11">Idempotent F</text>
+  </g>
+</svg>

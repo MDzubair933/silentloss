@@ -1,0 +1,89 @@
+{
+  "title": "SilentLoss Publication-Safe Before vs. Corrected Live After Comparison Dataset",
+  "generated_utc": "2026-11-26T12:41:39Z",
+  "revision_identity": {
+    "before_architecture": "Baseline V3 (Dual-Write: Atomic DDB Orders+Idempotency followed by independent synchronous SQS publish)",
+    "corrected_live_after_architecture": "F1 Transactional Outbox (Atomic 3-table DDB transaction + DynamoDB Streams relay + EventBridge 1-minute sweeper + conditional pre-send reservation)",
+    "region": "us-east-1"
+  },
+  "before_vs_corrected_live": {
+    "C": {
+      "before": 160,
+      "corrected_live_after": 160,
+      "delta": 0
+    },
+    "F": {
+      "before": 150,
+      "corrected_live_after": 160,
+      "delta": 10
+    },
+    "P": {
+      "before": 0,
+      "corrected_live_after": 0,
+      "delta": 0
+    },
+    "E": {
+      "before": 0,
+      "corrected_live_after": 0,
+      "delta": 0
+    },
+    "U": {
+      "before": 10,
+      "corrected_live_after": 0,
+      "delta": -10
+    },
+    "I": {
+      "before": 0,
+      "corrected_live_after": 0,
+      "delta": 0
+    },
+    "D": {
+      "before": 0,
+      "corrected_live_after": 0,
+      "delta": 0
+    },
+    "silent_loss_rate_percent": {
+      "before": 6.25,
+      "corrected_live_after": 0.0,
+      "delta_pp": -6.25
+    },
+    "b02_loss_rate_percent": {
+      "before": 25.0,
+      "corrected_live_after": 0.0,
+      "delta_pp": -25.0
+    },
+    "fulfillment_completion_rate_percent": {
+      "before": 93.75,
+      "corrected_live_after": 100.0,
+      "delta_pp": 6.25
+    },
+    "b02_timeout_recovery_sec": {
+      "before": null,
+      "historical_phase7_max": 2.818,
+      "corrected_live_min": 1.667,
+      "corrected_live_avg": 2.058,
+      "corrected_live_max": 2.8
+    },
+    "ingestion_lambda_duration_ms": {
+      "before_avg": 71.28,
+      "before_p95": 98.85,
+      "corrected_live_avg": 37.88,
+      "corrected_live_p95": 43.91
+    },
+    "client_http_rtt_ms": {
+      "before_avg": 951.67,
+      "before_p95": 1155.96,
+      "corrected_live_avg": 965.32,
+      "corrected_live_p95": 1143.13
+    },
+    "campaign_wall_clock_sec": {
+      "before": 484.0,
+      "corrected_live_after": 138.033
+    },
+    "estimated_gross_usd": {
+      "before": 0.002112,
+      "historical_phase7_after": 0.002528,
+      "corrected_live_after_window": 0.002901
+    }
+  }
+}

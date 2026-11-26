@@ -1,0 +1,1063 @@
+{
+  "project": "SilentLoss",
+  "generated_utc": "2026-11-26T12:41:39Z",
+  "region": "us-east-1",
+  "invariant": "C = F + P + E + U + I",
+  "smoke_verification_finpref": {
+    "run_id": "finpref",
+    "verified_at_utc": "2026-11-26T12:30:25Z",
+    "unauthenticated_denials": {
+      "/orders": 403,
+      "/experiments/orders": 403
+    },
+    "unsupported_fault_response": {
+      "status_code": 400,
+      "body": {
+        "error": "UnsupportedBenchmarkFault"
+      }
+    },
+    "ordinary_orders_header_isolation": {
+      "status_code": 201,
+      "db_outcome": "CONFIRMED",
+      "queue_outcome": "PENDING",
+      "fault_execution_evidence": null
+    },
+    "idempotent_replays": {
+      "ordinary_order_200": true,
+      "experiment_order_200": true
+    },
+    "duplicate_sqs_control_fulfillment_count": 3,
+    "cold_start_recovery_times_sec": {
+      "ord_finpref__to_001": 18.246,
+      "ord_finpref__ok_001": 19.278,
+      "ord_finpref__s503_001": 15.906
+    }
+  },
+  "before_campaign": {
+    "combined": {
+      "replicates": [
+        "bef26r1",
+        "bef26r2"
+      ],
+      "seeds": [
+        20261126,
+        20261127
+      ],
+      "total_steps": 192,
+      "total_committed_orders_C": 160,
+      "fulfilled_orders_F": 150,
+      "durably_pending_P": 0,
+      "explicitly_failed_E": 0,
+      "confirmed_silent_loss_U": 10,
+      "indeterminate_I": 0,
+      "duplicate_completed_effects_D": 0,
+      "duplicate_delivery_attempts": 8,
+      "silent_loss_rate_percent": 6.25,
+      "fulfillment_completion_rate_percent": 93.75,
+      "b02_fault_scenario_loss_rate_percent": 25.0,
+      "b02_timeout_to_loss_conversion_rate_percent": 100.0,
+      "throttled_429_count": 0,
+      "invariant_holds": true,
+      "source_completeness_percent": 83.33,
+      "source_completeness": {
+        "orders_table_complete": true,
+        "fulfillment_table_complete": true,
+        "dlq_evidence_complete": false,
+        "rejection_audit_complete": true,
+        "publication_logs_complete": true,
+        "pagination_complete": true,
+        "run_scope": "bef26r1+bef26r2",
+        "observation_timestamp_utc": "2026-11-26T11:08:42Z",
+        "collection_boundaries": "Non-destructive scan across both replicates post-quiescence; SQS active queue never consumed"
+      },
+      "standard_api_latency_ms": {
+        "count": 160,
+        "min_ms": 818.65,
+        "avg_ms": 951.67,
+        "p50_ms": 924.21,
+        "p95_ms": 1155.96,
+        "max_ms": 2746.44
+      },
+      "http_201_api_latency_ms": {
+        "count": 150,
+        "min_ms": 818.65,
+        "avg_ms": 953.69,
+        "p50_ms": 924.21,
+        "p95_ms": 1168.72,
+        "max_ms": 2746.44
+      },
+      "http_504_api_latency_ms": {
+        "count": 10,
+        "min_ms": 848.52,
+        "avg_ms": 921.44,
+        "p50_ms": 921.18,
+        "p95_ms": 982.31,
+        "max_ms": 982.31
+      },
+      "e2e_async_fulfillment_lag_seconds": {
+        "B-01": {
+          "count": 40,
+          "min_s": 0.0,
+          "avg_s": 0.125,
+          "max_s": 1.0
+        },
+        "B-02": {
+          "count": 30,
+          "min_s": 0.0,
+          "avg_s": 0.067,
+          "max_s": 1.0
+        },
+        "B-03": {
+          "count": 40,
+          "min_s": 0.0,
+          "avg_s": 0.025,
+          "max_s": 1.0
+        },
+        "B-04": {
+          "count": 40,
+          "min_s": 0.0,
+          "avg_s": 0.175,
+          "max_s": 1.0
+        }
+      }
+    },
+    "replicates": {
+      "bef26r1": {
+        "replicate": 1,
+        "run_id": "bef26r1",
+        "seed": 20261126,
+        "start_utc": "2026-11-26T10:55:59Z",
+        "end_utc": "2026-11-26T11:00:05Z",
+        "wall_clock_duration_seconds": 246.0,
+        "replicate_totals": {
+          "total_steps": 96,
+          "C": 80,
+          "F": 75,
+          "P": 0,
+          "E": 0,
+          "U": 5,
+          "I": 0,
+          "D": 0,
+          "duplicate_delivery_attempts": 4,
+          "silent_loss_rate_percent": 6.25,
+          "fulfillment_completion_rate_percent": 93.75,
+          "scheduled_faults": 9,
+          "confirmed_executed_faults": 9,
+          "throttled_429_count": 0,
+          "invariant_holds": true,
+          "standard_api_latency_ms": {
+            "count": 80,
+            "min_ms": 818.65,
+            "avg_ms": 950.4,
+            "p50_ms": 906.61,
+            "p95_ms": 1070.15,
+            "max_ms": 2746.44
+          }
+        },
+        "scenarios": {
+          "B-01": {
+            "scenario_id": "B-01",
+            "scenario_name": "Healthy Traffic + Controls",
+            "total_steps": 28,
+            "standard_orders": 20,
+            "negative_controls_rejected_400": 4,
+            "replay_controls_200": 4,
+            "duplicate_events_sent": 0,
+            "scheduled_faults": 0,
+            "confirmed_executed_faults": 0,
+            "throttled_429_count": 0,
+            "http_status_counts": {
+              "201": 20,
+              "400": 4,
+              "200": 4
+            },
+            "inline_convergence_observed": true,
+            "reconciliation": {
+              "C": 20,
+              "F": 20,
+              "P": 0,
+              "E": 0,
+              "U": 0,
+              "I": 0,
+              "D": 0,
+              "duplicate_delivery_attempts": 0,
+              "recovery_time_sec": 0.0,
+              "silent_loss_rate_percent": 0.0,
+              "fulfillment_completion_rate_percent": 100.0,
+              "invariant_holds": true,
+              "clean_success_verified": true,
+              "source_completeness_percent": 83.33
+            },
+            "standard_api_latency_ms": {
+              "count": 20,
+              "min_ms": 855.5,
+              "avg_ms": 1036.38,
+              "p50_ms": 906.61,
+              "p95_ms": 1498.7,
+              "max_ms": 2746.44
+            }
+          },
+          "B-02": {
+            "scenario_id": "B-02",
+            "scenario_name": "Post-Commit Publication Ambiguous Timeout",
+            "total_steps": 20,
+            "standard_orders": 20,
+            "negative_controls_rejected_400": 0,
+            "replay_controls_200": 0,
+            "duplicate_events_sent": 0,
+            "scheduled_faults": 5,
+            "confirmed_executed_faults": 5,
+            "throttled_429_count": 0,
+            "http_status_counts": {
+              "201": 15,
+              "504": 5
+            },
+            "inline_convergence_observed": false,
+            "reconciliation": {
+              "C": 20,
+              "F": 15,
+              "P": 0,
+              "E": 0,
+              "U": 5,
+              "I": 0,
+              "D": 0,
+              "duplicate_delivery_attempts": 0,
+              "recovery_time_sec": 0.0,
+              "silent_loss_rate_percent": 25.0,
+              "fulfillment_completion_rate_percent": 75.0,
+              "invariant_holds": true,
+              "clean_success_verified": false,
+              "source_completeness_percent": 83.33
+            },
+            "standard_api_latency_ms": {
+              "count": 20,
+              "min_ms": 833.81,
+              "avg_ms": 889.48,
+              "p50_ms": 885.65,
+              "p95_ms": 964.98,
+              "max_ms": 969.46
+            }
+          },
+          "B-03": {
+            "scenario_id": "B-03",
+            "scenario_name": "Temporary Publisher Unavailability (503)",
+            "total_steps": 20,
+            "standard_orders": 20,
+            "negative_controls_rejected_400": 0,
+            "replay_controls_200": 0,
+            "duplicate_events_sent": 0,
+            "scheduled_faults": 4,
+            "confirmed_executed_faults": 4,
+            "throttled_429_count": 0,
+            "http_status_counts": {
+              "201": 20
+            },
+            "inline_convergence_observed": false,
+            "reconciliation": {
+              "C": 20,
+              "F": 20,
+              "P": 0,
+              "E": 0,
+              "U": 0,
+              "I": 0,
+              "D": 0,
+              "duplicate_delivery_attempts": 0,
+              "recovery_time_sec": 0.0,
+              "silent_loss_rate_percent": 0.0,
+              "fulfillment_completion_rate_percent": 100.0,
+              "invariant_holds": true,
+              "clean_success_verified": true,
+              "source_completeness_percent": 83.33
+            },
+            "standard_api_latency_ms": {
+              "count": 20,
+              "min_ms": 870.23,
+              "avg_ms": 964.25,
+              "p50_ms": 955.17,
+              "p95_ms": 1013.64,
+              "max_ms": 1149.68
+            }
+          },
+          "B-04": {
+            "scenario_id": "B-04",
+            "scenario_name": "Explicit Duplicate Domain Event Control",
+            "total_steps": 28,
+            "standard_orders": 20,
+            "negative_controls_rejected_400": 0,
+            "replay_controls_200": 4,
+            "duplicate_events_sent": 4,
+            "scheduled_faults": 0,
+            "confirmed_executed_faults": 0,
+            "throttled_429_count": 0,
+            "http_status_counts": {
+              "201": 20,
+              "200": 4,
+              "202": 4
+            },
+            "inline_convergence_observed": false,
+            "reconciliation": {
+              "C": 20,
+              "F": 20,
+              "P": 0,
+              "E": 0,
+              "U": 0,
+              "I": 0,
+              "D": 0,
+              "duplicate_delivery_attempts": 4,
+              "recovery_time_sec": 0.0,
+              "silent_loss_rate_percent": 0.0,
+              "fulfillment_completion_rate_percent": 100.0,
+              "invariant_holds": true,
+              "clean_success_verified": true,
+              "source_completeness_percent": 83.33
+            },
+            "standard_api_latency_ms": {
+              "count": 20,
+              "min_ms": 818.65,
+              "avg_ms": 911.49,
+              "p50_ms": 885.1,
+              "p95_ms": 1070.15,
+              "max_ms": 1185.1
+            }
+          }
+        }
+      },
+      "bef26r2": {
+        "replicate": 2,
+        "run_id": "bef26r2",
+        "seed": 20261127,
+        "start_utc": "2026-11-26T11:00:38Z",
+        "end_utc": "2026-11-26T11:04:36Z",
+        "wall_clock_duration_seconds": 238.0,
+        "replicate_totals": {
+          "total_steps": 96,
+          "C": 80,
+          "F": 75,
+          "P": 0,
+          "E": 0,
+          "U": 5,
+          "I": 0,
+          "D": 0,
+          "duplicate_delivery_attempts": 4,
+          "silent_loss_rate_percent": 6.25,
+          "fulfillment_completion_rate_percent": 93.75,
+          "scheduled_faults": 9,
+          "confirmed_executed_faults": 9,
+          "throttled_429_count": 0,
+          "invariant_holds": true,
+          "standard_api_latency_ms": {
+            "count": 80,
+            "min_ms": 842.2,
+            "avg_ms": 952.94,
+            "p50_ms": 928.67,
+            "p95_ms": 1168.72,
+            "max_ms": 1443.25
+          }
+        },
+        "scenarios": {
+          "B-01": {
+            "scenario_id": "B-01",
+            "scenario_name": "Healthy Traffic + Controls",
+            "total_steps": 28,
+            "standard_orders": 20,
+            "negative_controls_rejected_400": 4,
+            "replay_controls_200": 4,
+            "duplicate_events_sent": 0,
+            "scheduled_faults": 0,
+            "confirmed_executed_faults": 0,
+            "throttled_429_count": 0,
+            "http_status_counts": {
+              "201": 20,
+              "400": 4,
+              "200": 4
+            },
+            "inline_convergence_observed": true,
+            "reconciliation": {
+              "C": 20,
+              "F": 20,
+              "P": 0,
+              "E": 0,
+              "U": 0,
+              "I": 0,
+              "D": 0,
+              "duplicate_delivery_attempts": 0,
+              "recovery_time_sec": 0.0,
+              "silent_loss_rate_percent": 0.0,
+              "fulfillment_completion_rate_percent": 100.0,
+              "invariant_holds": true,
+              "clean_success_verified": true,
+              "source_completeness_percent": 83.33
+            },
+            "standard_api_latency_ms": {
+              "count": 20,
+              "min_ms": 842.2,
+              "avg_ms": 966.76,
+              "p50_ms": 922.94,
+              "p95_ms": 1357.78,
+              "max_ms": 1443.25
+            }
+          },
+          "B-02": {
+            "scenario_id": "B-02",
+            "scenario_name": "Post-Commit Publication Ambiguous Timeout",
+            "total_steps": 20,
+            "standard_orders": 20,
+            "negative_controls_rejected_400": 0,
+            "replay_controls_200": 0,
+            "duplicate_events_sent": 0,
+            "scheduled_faults": 5,
+            "confirmed_executed_faults": 5,
+            "throttled_429_count": 0,
+            "http_status_counts": {
+              "201": 15,
+              "504": 5
+            },
+            "inline_convergence_observed": false,
+            "reconciliation": {
+              "C": 20,
+              "F": 15,
+              "P": 0,
+              "E": 0,
+              "U": 5,
+              "I": 0,
+              "D": 0,
+              "duplicate_delivery_attempts": 0,
+              "recovery_time_sec": 0.0,
+              "silent_loss_rate_percent": 25.0,
+              "fulfillment_completion_rate_percent": 75.0,
+              "invariant_holds": true,
+              "clean_success_verified": false,
+              "source_completeness_percent": 83.33
+            },
+            "standard_api_latency_ms": {
+              "count": 20,
+              "min_ms": 848.52,
+              "avg_ms": 915.0,
+              "p50_ms": 911.83,
+              "p95_ms": 973.65,
+              "max_ms": 982.31
+            }
+          },
+          "B-03": {
+            "scenario_id": "B-03",
+            "scenario_name": "Temporary Publisher Unavailability (503)",
+            "total_steps": 20,
+            "standard_orders": 20,
+            "negative_controls_rejected_400": 0,
+            "replay_controls_200": 0,
+            "duplicate_events_sent": 0,
+            "scheduled_faults": 4,
+            "confirmed_executed_faults": 4,
+            "throttled_429_count": 0,
+            "http_status_counts": {
+              "201": 20
+            },
+            "inline_convergence_observed": false,
+            "reconciliation": {
+              "C": 20,
+              "F": 20,
+              "P": 0,
+              "E": 0,
+              "U": 0,
+              "I": 0,
+              "D": 0,
+              "duplicate_delivery_attempts": 0,
+              "recovery_time_sec": 0.0,
+              "silent_loss_rate_percent": 0.0,
+              "fulfillment_completion_rate_percent": 100.0,
+              "invariant_holds": true,
+              "clean_success_verified": true,
+              "source_completeness_percent": 83.33
+            },
+            "standard_api_latency_ms": {
+              "count": 20,
+              "min_ms": 859.5,
+              "avg_ms": 962.19,
+              "p50_ms": 944.55,
+              "p95_ms": 1155.96,
+              "max_ms": 1168.72
+            }
+          },
+          "B-04": {
+            "scenario_id": "B-04",
+            "scenario_name": "Explicit Duplicate Domain Event Control",
+            "total_steps": 28,
+            "standard_orders": 20,
+            "negative_controls_rejected_400": 0,
+            "replay_controls_200": 4,
+            "duplicate_events_sent": 4,
+            "scheduled_faults": 0,
+            "confirmed_executed_faults": 0,
+            "throttled_429_count": 0,
+            "http_status_counts": {
+              "201": 20,
+              "200": 4,
+              "202": 4
+            },
+            "inline_convergence_observed": false,
+            "reconciliation": {
+              "C": 20,
+              "F": 20,
+              "P": 0,
+              "E": 0,
+              "U": 0,
+              "I": 0,
+              "D": 0,
+              "duplicate_delivery_attempts": 4,
+              "recovery_time_sec": 0.0,
+              "silent_loss_rate_percent": 0.0,
+              "fulfillment_completion_rate_percent": 100.0,
+              "invariant_holds": true,
+              "clean_success_verified": true,
+              "source_completeness_percent": 83.33
+            },
+            "standard_api_latency_ms": {
+              "count": 20,
+              "min_ms": 862.05,
+              "avg_ms": 967.83,
+              "p50_ms": 935.34,
+              "p95_ms": 1180.79,
+              "max_ms": 1213.8
+            }
+          }
+        }
+      }
+    },
+    "cost_assessment": {
+      "cost_explorer_accessible": true,
+      "cost_explorer_intraday_note": "Cost Explorer intraday lag returns $0.00 unblended USD while marked Estimated=true; itemized us-east-1 public on-demand usage computed directly from metered CloudWatch & AWS API counts.",
+      "metered_usage": {
+        "lambda_invocations": 348,
+        "lambda_billed_duration_ms": 26190.0,
+        "lambda_gb_seconds": 6.5475,
+        "apigw_http_requests": 191,
+        "sqs_api_requests": 486,
+        "dynamodb_consumed_rcu": 5222.0,
+        "dynamodb_consumed_wcu": 1432.0
+      },
+      "estimated_on_demand_usd_gross_before_free_tier": {
+        "lambda_usd": 0.000179,
+        "apigw_usd": 0.000191,
+        "sqs_usd": 0.000194,
+        "dynamodb_usd": 0.001548,
+        "total_estimated_usd": 0.002112
+      }
+    }
+  },
+  "corrected_after_campaign": {
+    "combined": {
+      "replicates": [
+        "fin26r1",
+        "fin26r2"
+      ],
+      "seeds": [
+        20261126,
+        20261127
+      ],
+      "total_steps": 192,
+      "total_committed_orders_C": 160,
+      "fulfilled_orders_F": 160,
+      "durably_pending_P": 0,
+      "explicitly_failed_E": 0,
+      "confirmed_silent_loss_U": 0,
+      "indeterminate_I": 0,
+      "duplicate_completed_effects_D": 0,
+      "duplicate_delivery_attempts": 8,
+      "silent_loss_rate_percent": 0.0,
+      "fulfillment_completion_rate_percent": 100.0,
+      "b02_fault_orders_recovered": 10,
+      "b02_timeout_recovery_time_sec": {
+        "count": 10,
+        "min": 1.667,
+        "avg": 2.058,
+        "max": 2.8
+      },
+      "b03_503_recovery_time_sec": {
+        "count": 8,
+        "min": 0.22,
+        "avg": 0.39,
+        "max": 0.57
+      },
+      "throttled_429_count": 0,
+      "invariant_holds": true,
+      "clean_success_verified": true,
+      "source_completeness_percent": 83.33,
+      "source_completeness": {
+        "orders_table_complete": true,
+        "fulfillment_table_complete": true,
+        "dlq_evidence_complete": false,
+        "rejection_audit_complete": true,
+        "publication_logs_complete": true,
+        "pagination_complete": true,
+        "run_scope": "fin26r1+fin26r2",
+        "observation_timestamp_utc": "2026-11-26T12:40:51Z",
+        "collection_boundaries": "Non-destructive scan across both replicates post-quiescence; OutboxTable scanned consistently; SQS never consumed"
+      },
+      "standard_api_latency_ms": {
+        "count": 160,
+        "min_ms": 799.29,
+        "avg_ms": 965.32,
+        "p50_ms": 902.21,
+        "p95_ms": 1143.13,
+        "max_ms": 2609.57
+      },
+      "e2e_async_fulfillment_lag_seconds": {
+        "B-01": {
+          "count": 40,
+          "min_s": 0.0,
+          "avg_s": 0.4,
+          "max_s": 1.0
+        },
+        "B-02": {
+          "count": 40,
+          "min_s": 0.0,
+          "avg_s": 0.925,
+          "max_s": 3.0
+        },
+        "B-03": {
+          "count": 40,
+          "min_s": 0.0,
+          "avg_s": 0.625,
+          "max_s": 1.0
+        },
+        "B-04": {
+          "count": 40,
+          "min_s": 0.0,
+          "avg_s": 0.7,
+          "max_s": 1.0
+        }
+      }
+    },
+    "replicates": {
+      "fin26r1": {
+        "replicate": 1,
+        "run_id": "fin26r1",
+        "seed": 20261126,
+        "start_utc": "2026-11-26T12:31:51Z",
+        "end_utc": "2026-11-26T12:32:54Z",
+        "wall_clock_duration_seconds": 62.602,
+        "replicate_totals": {
+          "total_steps": 96,
+          "C": 80,
+          "F": 80,
+          "P": 0,
+          "E": 0,
+          "U": 0,
+          "I": 0,
+          "D": 0,
+          "duplicate_delivery_attempts": 4,
+          "recovery_time_max_sec": 2.583,
+          "silent_loss_rate_percent": 0.0,
+          "fulfillment_completion_rate_percent": 100.0,
+          "scheduled_faults": 9,
+          "confirmed_executed_faults": 9,
+          "throttled_429_count": 0,
+          "invariant_holds": true,
+          "clean_success_verified": true,
+          "standard_api_latency_ms": {
+            "count": 80,
+            "min_ms": 799.29,
+            "avg_ms": 893.57,
+            "p50_ms": 860.99,
+            "p95_ms": 975.08,
+            "max_ms": 2609.57
+          }
+        },
+        "scenarios": {
+          "B-01": {
+            "scenario_id": "B-01",
+            "scenario_name": "Healthy Traffic + Controls",
+            "total_steps": 28,
+            "standard_orders": 20,
+            "negative_controls_rejected_400": 4,
+            "replay_controls_200": 4,
+            "duplicate_events_sent": 0,
+            "scheduled_faults": 0,
+            "confirmed_executed_faults": 0,
+            "throttled_429_count": 0,
+            "http_status_counts": {
+              "201": 20,
+              "400": 4,
+              "200": 4
+            },
+            "inline_convergence_observed": true,
+            "reconciliation": {
+              "C": 20,
+              "F": 20,
+              "P": 0,
+              "E": 0,
+              "U": 0,
+              "I": 0,
+              "D": 0,
+              "duplicate_delivery_attempts": 0,
+              "recovery_time_sec": 0.0,
+              "silent_loss_rate_percent": 0.0,
+              "fulfillment_completion_rate_percent": 100.0,
+              "invariant_holds": true,
+              "clean_success_verified": true,
+              "source_completeness_percent": 83.33
+            },
+            "standard_api_latency_ms": {
+              "count": 20,
+              "min_ms": 802.45,
+              "avg_ms": 980.91,
+              "p50_ms": 886.19,
+              "p95_ms": 1215.05,
+              "max_ms": 2609.57
+            }
+          },
+          "B-02": {
+            "scenario_id": "B-02",
+            "scenario_name": "Post-Commit Publication Ambiguous Timeout",
+            "total_steps": 20,
+            "standard_orders": 20,
+            "negative_controls_rejected_400": 0,
+            "replay_controls_200": 0,
+            "duplicate_events_sent": 0,
+            "scheduled_faults": 5,
+            "confirmed_executed_faults": 5,
+            "throttled_429_count": 0,
+            "http_status_counts": {
+              "201": 20
+            },
+            "inline_convergence_observed": true,
+            "reconciliation": {
+              "C": 20,
+              "F": 20,
+              "P": 0,
+              "E": 0,
+              "U": 0,
+              "I": 0,
+              "D": 0,
+              "duplicate_delivery_attempts": 0,
+              "recovery_time_sec": 2.583,
+              "silent_loss_rate_percent": 0.0,
+              "fulfillment_completion_rate_percent": 100.0,
+              "invariant_holds": true,
+              "clean_success_verified": true,
+              "source_completeness_percent": 83.33
+            },
+            "standard_api_latency_ms": {
+              "count": 20,
+              "min_ms": 799.29,
+              "avg_ms": 853.0,
+              "p50_ms": 848.5,
+              "p95_ms": 890.09,
+              "max_ms": 901.8
+            }
+          },
+          "B-03": {
+            "scenario_id": "B-03",
+            "scenario_name": "Temporary Publisher Unavailability (503)",
+            "total_steps": 20,
+            "standard_orders": 20,
+            "negative_controls_rejected_400": 0,
+            "replay_controls_200": 0,
+            "duplicate_events_sent": 0,
+            "scheduled_faults": 4,
+            "confirmed_executed_faults": 4,
+            "throttled_429_count": 0,
+            "http_status_counts": {
+              "201": 20
+            },
+            "inline_convergence_observed": true,
+            "reconciliation": {
+              "C": 20,
+              "F": 20,
+              "P": 0,
+              "E": 0,
+              "U": 0,
+              "I": 0,
+              "D": 0,
+              "duplicate_delivery_attempts": 0,
+              "recovery_time_sec": 0.57,
+              "silent_loss_rate_percent": 0.0,
+              "fulfillment_completion_rate_percent": 100.0,
+              "invariant_holds": true,
+              "clean_success_verified": true,
+              "source_completeness_percent": 83.33
+            },
+            "standard_api_latency_ms": {
+              "count": 20,
+              "min_ms": 813.21,
+              "avg_ms": 869.91,
+              "p50_ms": 855.28,
+              "p95_ms": 941.27,
+              "max_ms": 1026.16
+            }
+          },
+          "B-04": {
+            "scenario_id": "B-04",
+            "scenario_name": "Explicit Duplicate Domain Event Control",
+            "total_steps": 28,
+            "standard_orders": 20,
+            "negative_controls_rejected_400": 0,
+            "replay_controls_200": 4,
+            "duplicate_events_sent": 4,
+            "scheduled_faults": 0,
+            "confirmed_executed_faults": 0,
+            "throttled_429_count": 0,
+            "http_status_counts": {
+              "201": 20,
+              "200": 4,
+              "202": 4
+            },
+            "inline_convergence_observed": true,
+            "reconciliation": {
+              "C": 20,
+              "F": 20,
+              "P": 0,
+              "E": 0,
+              "U": 0,
+              "I": 0,
+              "D": 0,
+              "duplicate_delivery_attempts": 4,
+              "recovery_time_sec": 0.0,
+              "silent_loss_rate_percent": 0.0,
+              "fulfillment_completion_rate_percent": 100.0,
+              "invariant_holds": true,
+              "clean_success_verified": true,
+              "source_completeness_percent": 83.33
+            },
+            "standard_api_latency_ms": {
+              "count": 20,
+              "min_ms": 805.38,
+              "avg_ms": 870.44,
+              "p50_ms": 860.37,
+              "p95_ms": 975.08,
+              "max_ms": 975.98
+            }
+          }
+        }
+      },
+      "fin26r2": {
+        "replicate": 2,
+        "run_id": "fin26r2",
+        "seed": 20261127,
+        "start_utc": "2026-11-26T12:33:00Z",
+        "end_utc": "2026-11-26T12:34:16Z",
+        "wall_clock_duration_seconds": 75.431,
+        "replicate_totals": {
+          "total_steps": 96,
+          "C": 80,
+          "F": 80,
+          "P": 0,
+          "E": 0,
+          "U": 0,
+          "I": 0,
+          "D": 0,
+          "duplicate_delivery_attempts": 4,
+          "recovery_time_max_sec": 2.8,
+          "silent_loss_rate_percent": 0.0,
+          "fulfillment_completion_rate_percent": 100.0,
+          "scheduled_faults": 9,
+          "confirmed_executed_faults": 9,
+          "throttled_429_count": 0,
+          "invariant_holds": true,
+          "clean_success_verified": true,
+          "standard_api_latency_ms": {
+            "count": 80,
+            "min_ms": 827.4,
+            "avg_ms": 1037.08,
+            "p50_ms": 998.08,
+            "p95_ms": 1204.89,
+            "max_ms": 2549.46
+          }
+        },
+        "scenarios": {
+          "B-01": {
+            "scenario_id": "B-01",
+            "scenario_name": "Healthy Traffic + Controls",
+            "total_steps": 28,
+            "standard_orders": 20,
+            "negative_controls_rejected_400": 4,
+            "replay_controls_200": 4,
+            "duplicate_events_sent": 0,
+            "scheduled_faults": 0,
+            "confirmed_executed_faults": 0,
+            "throttled_429_count": 0,
+            "http_status_counts": {
+              "201": 20,
+              "400": 4,
+              "200": 4
+            },
+            "inline_convergence_observed": true,
+            "reconciliation": {
+              "C": 20,
+              "F": 20,
+              "P": 0,
+              "E": 0,
+              "U": 0,
+              "I": 0,
+              "D": 0,
+              "duplicate_delivery_attempts": 0,
+              "recovery_time_sec": 0.0,
+              "silent_loss_rate_percent": 0.0,
+              "fulfillment_completion_rate_percent": 100.0,
+              "invariant_holds": true,
+              "clean_success_verified": true,
+              "source_completeness_percent": 83.33
+            },
+            "standard_api_latency_ms": {
+              "count": 20,
+              "min_ms": 857.31,
+              "avg_ms": 1168.77,
+              "p50_ms": 988.48,
+              "p95_ms": 2178.27,
+              "max_ms": 2549.46
+            }
+          },
+          "B-02": {
+            "scenario_id": "B-02",
+            "scenario_name": "Post-Commit Publication Ambiguous Timeout",
+            "total_steps": 20,
+            "standard_orders": 20,
+            "negative_controls_rejected_400": 0,
+            "replay_controls_200": 0,
+            "duplicate_events_sent": 0,
+            "scheduled_faults": 5,
+            "confirmed_executed_faults": 5,
+            "throttled_429_count": 0,
+            "http_status_counts": {
+              "201": 20
+            },
+            "inline_convergence_observed": true,
+            "reconciliation": {
+              "C": 20,
+              "F": 20,
+              "P": 0,
+              "E": 0,
+              "U": 0,
+              "I": 0,
+              "D": 0,
+              "duplicate_delivery_attempts": 0,
+              "recovery_time_sec": 2.8,
+              "silent_loss_rate_percent": 0.0,
+              "fulfillment_completion_rate_percent": 100.0,
+              "invariant_holds": true,
+              "clean_success_verified": true,
+              "source_completeness_percent": 83.33
+            },
+            "standard_api_latency_ms": {
+              "count": 20,
+              "min_ms": 827.4,
+              "avg_ms": 989.16,
+              "p50_ms": 990.9,
+              "p95_ms": 1123.34,
+              "max_ms": 1124.93
+            }
+          },
+          "B-03": {
+            "scenario_id": "B-03",
+            "scenario_name": "Temporary Publisher Unavailability (503)",
+            "total_steps": 20,
+            "standard_orders": 20,
+            "negative_controls_rejected_400": 0,
+            "replay_controls_200": 0,
+            "duplicate_events_sent": 0,
+            "scheduled_faults": 4,
+            "confirmed_executed_faults": 4,
+            "throttled_429_count": 0,
+            "http_status_counts": {
+              "201": 20
+            },
+            "inline_convergence_observed": true,
+            "reconciliation": {
+              "C": 20,
+              "F": 20,
+              "P": 0,
+              "E": 0,
+              "U": 0,
+              "I": 0,
+              "D": 0,
+              "duplicate_delivery_attempts": 0,
+              "recovery_time_sec": 0.471,
+              "silent_loss_rate_percent": 0.0,
+              "fulfillment_completion_rate_percent": 100.0,
+              "invariant_holds": true,
+              "clean_success_verified": true,
+              "source_completeness_percent": 83.33
+            },
+            "standard_api_latency_ms": {
+              "count": 20,
+              "min_ms": 870.37,
+              "avg_ms": 1006.06,
+              "p50_ms": 1009.84,
+              "p95_ms": 1065.09,
+              "max_ms": 1079.35
+            }
+          },
+          "B-04": {
+            "scenario_id": "B-04",
+            "scenario_name": "Explicit Duplicate Domain Event Control",
+            "total_steps": 28,
+            "standard_orders": 20,
+            "negative_controls_rejected_400": 0,
+            "replay_controls_200": 4,
+            "duplicate_events_sent": 4,
+            "scheduled_faults": 0,
+            "confirmed_executed_faults": 0,
+            "throttled_429_count": 0,
+            "http_status_counts": {
+              "201": 20,
+              "200": 4,
+              "202": 4
+            },
+            "inline_convergence_observed": true,
+            "reconciliation": {
+              "C": 20,
+              "F": 20,
+              "P": 0,
+              "E": 0,
+              "U": 0,
+              "I": 0,
+              "D": 0,
+              "duplicate_delivery_attempts": 4,
+              "recovery_time_sec": 0.0,
+              "silent_loss_rate_percent": 0.0,
+              "fulfillment_completion_rate_percent": 100.0,
+              "invariant_holds": true,
+              "clean_success_verified": true,
+              "source_completeness_percent": 83.33
+            },
+            "standard_api_latency_ms": {
+              "count": 20,
+              "min_ms": 836.78,
+              "avg_ms": 984.33,
+              "p50_ms": 991.3,
+              "p95_ms": 1089.72,
+              "max_ms": 1091.31
+            }
+          }
+        }
+      }
+    },
+    "sweeper_live_pickup_order": {
+      "order_id": "ord_fin26r1__B-02_0009",
+      "trigger_source": "scheduled_sweeper",
+      "recovery_time_sec": 0.474,
+      "confirmed": 1,
+      "errors": 0
+    },
+    "cost_assessment": {
+      "pricing_formula_basis": "us-east-1 public on-demand rates ($0.20/1M Lambda req + $0.0000166667/GB-s conservative, $1.00/1M HTTP API req, $0.40/1M SQS req, $0.125/1M DDB RCU + $0.625/1M DDB WCU); before Always-Free tier",
+      "metered_usage": {
+        "lambda_campaign_invocations_cw_logs": 507,
+        "lambda_window_invocations_cw_metrics": 509,
+        "lambda_campaign_billed_duration_ms": 44071.0,
+        "lambda_gb_seconds": 11.0177,
+        "apigw_window_http_requests": 184,
+        "sqs_window_api_requests": 504,
+        "dynamodb_window_consumed_rcu": 2199.0,
+        "dynamodb_window_consumed_wcu": 3128.0
+      },
+      "estimated_on_demand_usd_gross_before_free_tier": {
+        "lambda_usd": 0.000285,
+        "apigw_usd": 0.000184,
+        "sqs_usd": 0.000202,
+        "dynamodb_usd": 0.00223,
+        "total_estimated_usd": 0.002901
+      }
+    }
+  }
+}

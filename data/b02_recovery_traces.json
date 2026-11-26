@@ -1,0 +1,672 @@
+[
+  {
+    "run_id": "fin26r1",
+    "order_id": "ord_fin26r1__B-02_0003",
+    "correlation_id": "corr_fin26r1_B-02_0003",
+    "api_ingestion": {
+      "http_status": 201,
+      "duration_ms": 871.06,
+      "db_outcome": "CONFIRMED",
+      "queue_outcome_at_commit": "PENDING",
+      "fault_scheduled": "SQS_INJECTED_TIMEOUT",
+      "committed_at": "2026-11-26T12:32:14Z"
+    },
+    "outbox_durable_state": {
+      "outbox_id": "outbox#ord_fin26r1__B-02_0003",
+      "event_id": "34501db4-04bb-5d06-85ae-0b7cf8295355",
+      "dispatch_state": "CONFIRMED",
+      "publication_uncertain": false,
+      "requires_attention": false,
+      "send_attempts_reserved": 1,
+      "blocked_attempts_executed": 2,
+      "fault_remaining_blocks": 0,
+      "attempt_count": 3,
+      "sqs_api_calls": 1,
+      "last_error": "PublicationAcknowledgementUnknown",
+      "recovery_source": "dynamodb_stream",
+      "recovery_time_sec": 1.981,
+      "sqs_message_id": "dae064f5-8165-4b41-8496-ff65e920077d",
+      "published_at": "2026-11-26T12:32:16Z"
+    },
+    "cloudwatch_relay_logs": [
+      {
+        "timestamp": "2026-11-26T12:32:14Z",
+        "service": "silentloss-outbox-publisher",
+        "level": "ERROR",
+        "message": "OUTBOX_PUBLISH_FAILED_DEFERRED: Durable intent retained in RETRY_WAIT for recovery",
+        "correlation_id": "corr_fin26r1_B-02_0003",
+        "order_id": "ord_fin26r1__B-02_0003",
+        "outbox_id": "outbox#ord_fin26r1__B-02_0003",
+        "trigger_source": "dynamodb_stream",
+        "error": "PublicationAcknowledgementUnknown",
+        "blocked_attempts": 2,
+        "sqs_api_calls": 0,
+        "next_attempt_at": 1795696336
+      },
+      {
+        "timestamp": "2026-11-26T12:32:16Z",
+        "service": "silentloss-outbox-publisher",
+        "level": "INFO",
+        "message": "Outbox event published and confirmed",
+        "correlation_id": "corr_fin26r1_B-02_0003",
+        "order_id": "ord_fin26r1__B-02_0003",
+        "outbox_id": "outbox#ord_fin26r1__B-02_0003",
+        "trigger_source": "dynamodb_stream",
+        "sqs_message_id": "dae064f5-8165-4b41-8496-ff65e920077d",
+        "blocked_attempts": 2,
+        "sqs_api_calls": 1,
+        "recovery_time_sec": 1.981
+      }
+    ],
+    "final_business_effect": {
+      "orders_status": "FULFILLED",
+      "orders_dispatch_status": "CONFIRMED",
+      "fulfillment_id": "FULFILLMENT#PRIMARY",
+      "fulfillment_status": "COMPLETED",
+      "fulfilled_at": "2026-11-26T12:32:16Z"
+    }
+  },
+  {
+    "run_id": "fin26r1",
+    "order_id": "ord_fin26r1__B-02_0010",
+    "correlation_id": "corr_fin26r1_B-02_0010",
+    "api_ingestion": {
+      "http_status": 201,
+      "duration_ms": 850.27,
+      "db_outcome": "CONFIRMED",
+      "queue_outcome_at_commit": "PENDING",
+      "fault_scheduled": "SQS_INJECTED_TIMEOUT",
+      "committed_at": "2026-11-26T12:32:17Z"
+    },
+    "outbox_durable_state": {
+      "outbox_id": "outbox#ord_fin26r1__B-02_0010",
+      "event_id": "cf851fb1-43a8-5391-9079-c3c6e8cb01cb",
+      "dispatch_state": "CONFIRMED",
+      "publication_uncertain": false,
+      "requires_attention": false,
+      "send_attempts_reserved": 1,
+      "blocked_attempts_executed": 2,
+      "fault_remaining_blocks": 0,
+      "attempt_count": 3,
+      "sqs_api_calls": 1,
+      "last_error": "PublicationAcknowledgementUnknown",
+      "recovery_source": "dynamodb_stream",
+      "recovery_time_sec": 1.667,
+      "sqs_message_id": "c3dee202-7ba5-4232-9603-65e255e67177",
+      "published_at": "2026-11-26T12:32:19Z"
+    },
+    "cloudwatch_relay_logs": [
+      {
+        "timestamp": "2026-11-26T12:32:17Z",
+        "service": "silentloss-outbox-publisher",
+        "level": "ERROR",
+        "message": "OUTBOX_PUBLISH_FAILED_DEFERRED: Durable intent retained in RETRY_WAIT for recovery",
+        "correlation_id": "corr_fin26r1_B-02_0010",
+        "order_id": "ord_fin26r1__B-02_0010",
+        "outbox_id": "outbox#ord_fin26r1__B-02_0010",
+        "trigger_source": "dynamodb_stream",
+        "error": "PublicationAcknowledgementUnknown",
+        "blocked_attempts": 2,
+        "sqs_api_calls": 0,
+        "next_attempt_at": 1795696339
+      },
+      {
+        "timestamp": "2026-11-26T12:32:19Z",
+        "service": "silentloss-outbox-publisher",
+        "level": "INFO",
+        "message": "Outbox event published and confirmed",
+        "correlation_id": "corr_fin26r1_B-02_0010",
+        "order_id": "ord_fin26r1__B-02_0010",
+        "outbox_id": "outbox#ord_fin26r1__B-02_0010",
+        "trigger_source": "dynamodb_stream",
+        "sqs_message_id": "c3dee202-7ba5-4232-9603-65e255e67177",
+        "blocked_attempts": 2,
+        "sqs_api_calls": 1,
+        "recovery_time_sec": 1.667
+      }
+    ],
+    "final_business_effect": {
+      "orders_status": "FULFILLED",
+      "orders_dispatch_status": "CONFIRMED",
+      "fulfillment_id": "FULFILLMENT#PRIMARY",
+      "fulfillment_status": "COMPLETED",
+      "fulfilled_at": "2026-11-26T12:32:19Z"
+    }
+  },
+  {
+    "run_id": "fin26r1",
+    "order_id": "ord_fin26r1__B-02_0011",
+    "correlation_id": "corr_fin26r1_B-02_0011",
+    "api_ingestion": {
+      "http_status": 201,
+      "duration_ms": 901.8,
+      "db_outcome": "CONFIRMED",
+      "queue_outcome_at_commit": "PENDING",
+      "fault_scheduled": "SQS_INJECTED_TIMEOUT",
+      "committed_at": "2026-11-26T12:32:17Z"
+    },
+    "outbox_durable_state": {
+      "outbox_id": "outbox#ord_fin26r1__B-02_0011",
+      "event_id": "fc64f17f-cec4-5f26-a52c-866543eea4ff",
+      "dispatch_state": "CONFIRMED",
+      "publication_uncertain": false,
+      "requires_attention": false,
+      "send_attempts_reserved": 1,
+      "blocked_attempts_executed": 2,
+      "fault_remaining_blocks": 0,
+      "attempt_count": 3,
+      "sqs_api_calls": 1,
+      "last_error": "PublicationAcknowledgementUnknown",
+      "recovery_source": "dynamodb_stream",
+      "recovery_time_sec": 2.583,
+      "sqs_message_id": "6e88c2cc-527d-4349-abbd-14cc450a40c3",
+      "published_at": "2026-11-26T12:32:20Z"
+    },
+    "cloudwatch_relay_logs": [
+      {
+        "timestamp": "2026-11-26T12:32:18Z",
+        "service": "silentloss-outbox-publisher",
+        "level": "ERROR",
+        "message": "OUTBOX_PUBLISH_FAILED_DEFERRED: Durable intent retained in RETRY_WAIT for recovery",
+        "correlation_id": "corr_fin26r1_B-02_0011",
+        "order_id": "ord_fin26r1__B-02_0011",
+        "outbox_id": "outbox#ord_fin26r1__B-02_0011",
+        "trigger_source": "dynamodb_stream",
+        "error": "PublicationAcknowledgementUnknown",
+        "blocked_attempts": 2,
+        "sqs_api_calls": 0,
+        "next_attempt_at": 1795696340
+      },
+      {
+        "timestamp": "2026-11-26T12:32:20Z",
+        "service": "silentloss-outbox-publisher",
+        "level": "INFO",
+        "message": "Outbox event published and confirmed",
+        "correlation_id": "corr_fin26r1_B-02_0011",
+        "order_id": "ord_fin26r1__B-02_0011",
+        "outbox_id": "outbox#ord_fin26r1__B-02_0011",
+        "trigger_source": "dynamodb_stream",
+        "sqs_message_id": "6e88c2cc-527d-4349-abbd-14cc450a40c3",
+        "blocked_attempts": 2,
+        "sqs_api_calls": 1,
+        "recovery_time_sec": 2.583
+      }
+    ],
+    "final_business_effect": {
+      "orders_status": "FULFILLED",
+      "orders_dispatch_status": "CONFIRMED",
+      "fulfillment_id": "FULFILLMENT#PRIMARY",
+      "fulfillment_status": "COMPLETED",
+      "fulfilled_at": "2026-11-26T12:32:20Z"
+    }
+  },
+  {
+    "run_id": "fin26r1",
+    "order_id": "ord_fin26r1__B-02_0012",
+    "correlation_id": "corr_fin26r1_B-02_0012",
+    "api_ingestion": {
+      "http_status": 201,
+      "duration_ms": 832.1,
+      "db_outcome": "CONFIRMED",
+      "queue_outcome_at_commit": "PENDING",
+      "fault_scheduled": "SQS_INJECTED_TIMEOUT",
+      "committed_at": "2026-11-26T12:32:18Z"
+    },
+    "outbox_durable_state": {
+      "outbox_id": "outbox#ord_fin26r1__B-02_0012",
+      "event_id": "1a730b92-e694-59d0-8882-df8ff218126d",
+      "dispatch_state": "CONFIRMED",
+      "publication_uncertain": false,
+      "requires_attention": false,
+      "send_attempts_reserved": 1,
+      "blocked_attempts_executed": 2,
+      "fault_remaining_blocks": 0,
+      "attempt_count": 3,
+      "sqs_api_calls": 1,
+      "last_error": "PublicationAcknowledgementUnknown",
+      "recovery_source": "dynamodb_stream",
+      "recovery_time_sec": 1.841,
+      "sqs_message_id": "e17089af-fa64-4856-9254-bbffcf4845ed",
+      "published_at": "2026-11-26T12:32:20Z"
+    },
+    "cloudwatch_relay_logs": [
+      {
+        "timestamp": "2026-11-26T12:32:18Z",
+        "service": "silentloss-outbox-publisher",
+        "level": "ERROR",
+        "message": "OUTBOX_PUBLISH_FAILED_DEFERRED: Durable intent retained in RETRY_WAIT for recovery",
+        "correlation_id": "corr_fin26r1_B-02_0012",
+        "order_id": "ord_fin26r1__B-02_0012",
+        "outbox_id": "outbox#ord_fin26r1__B-02_0012",
+        "trigger_source": "dynamodb_stream",
+        "error": "PublicationAcknowledgementUnknown",
+        "blocked_attempts": 2,
+        "sqs_api_calls": 0,
+        "next_attempt_at": 1795696340
+      },
+      {
+        "timestamp": "2026-11-26T12:32:20Z",
+        "service": "silentloss-outbox-publisher",
+        "level": "INFO",
+        "message": "Outbox event published and confirmed",
+        "correlation_id": "corr_fin26r1_B-02_0012",
+        "order_id": "ord_fin26r1__B-02_0012",
+        "outbox_id": "outbox#ord_fin26r1__B-02_0012",
+        "trigger_source": "dynamodb_stream",
+        "sqs_message_id": "e17089af-fa64-4856-9254-bbffcf4845ed",
+        "blocked_attempts": 2,
+        "sqs_api_calls": 1,
+        "recovery_time_sec": 1.841
+      }
+    ],
+    "final_business_effect": {
+      "orders_status": "FULFILLED",
+      "orders_dispatch_status": "CONFIRMED",
+      "fulfillment_id": "FULFILLMENT#PRIMARY",
+      "fulfillment_status": "COMPLETED",
+      "fulfilled_at": "2026-11-26T12:32:20Z"
+    }
+  },
+  {
+    "run_id": "fin26r1",
+    "order_id": "ord_fin26r1__B-02_0018",
+    "correlation_id": "corr_fin26r1_B-02_0018",
+    "api_ingestion": {
+      "http_status": 201,
+      "duration_ms": 799.29,
+      "db_outcome": "CONFIRMED",
+      "queue_outcome_at_commit": "PENDING",
+      "fault_scheduled": "SQS_INJECTED_TIMEOUT",
+      "committed_at": "2026-11-26T12:32:20Z"
+    },
+    "outbox_durable_state": {
+      "outbox_id": "outbox#ord_fin26r1__B-02_0018",
+      "event_id": "42dc28c8-a86f-51b5-ba36-d2db185cb82d",
+      "dispatch_state": "CONFIRMED",
+      "publication_uncertain": false,
+      "requires_attention": false,
+      "send_attempts_reserved": 1,
+      "blocked_attempts_executed": 2,
+      "fault_remaining_blocks": 0,
+      "attempt_count": 3,
+      "sqs_api_calls": 1,
+      "last_error": "PublicationAcknowledgementUnknown",
+      "recovery_source": "dynamodb_stream",
+      "recovery_time_sec": 2.28,
+      "sqs_message_id": "7a605d4c-d06a-43c8-ab39-724d2a669539",
+      "published_at": "2026-11-26T12:32:23Z"
+    },
+    "cloudwatch_relay_logs": [
+      {
+        "timestamp": "2026-11-26T12:32:21Z",
+        "service": "silentloss-outbox-publisher",
+        "level": "ERROR",
+        "message": "OUTBOX_PUBLISH_FAILED_DEFERRED: Durable intent retained in RETRY_WAIT for recovery",
+        "correlation_id": "corr_fin26r1_B-02_0018",
+        "order_id": "ord_fin26r1__B-02_0018",
+        "outbox_id": "outbox#ord_fin26r1__B-02_0018",
+        "trigger_source": "dynamodb_stream",
+        "error": "PublicationAcknowledgementUnknown",
+        "blocked_attempts": 2,
+        "sqs_api_calls": 0,
+        "next_attempt_at": 1795696343
+      },
+      {
+        "timestamp": "2026-11-26T12:32:23Z",
+        "service": "silentloss-outbox-publisher",
+        "level": "INFO",
+        "message": "Outbox event published and confirmed",
+        "correlation_id": "corr_fin26r1_B-02_0018",
+        "order_id": "ord_fin26r1__B-02_0018",
+        "outbox_id": "outbox#ord_fin26r1__B-02_0018",
+        "trigger_source": "dynamodb_stream",
+        "sqs_message_id": "7a605d4c-d06a-43c8-ab39-724d2a669539",
+        "blocked_attempts": 2,
+        "sqs_api_calls": 1,
+        "recovery_time_sec": 2.28
+      }
+    ],
+    "final_business_effect": {
+      "orders_status": "FULFILLED",
+      "orders_dispatch_status": "CONFIRMED",
+      "fulfillment_id": "FULFILLMENT#PRIMARY",
+      "fulfillment_status": "COMPLETED",
+      "fulfilled_at": "2026-11-26T12:32:23Z"
+    }
+  },
+  {
+    "run_id": "fin26r2",
+    "order_id": "ord_fin26r2__B-02_0003",
+    "correlation_id": "corr_fin26r2_B-02_0003",
+    "api_ingestion": {
+      "http_status": 201,
+      "duration_ms": 957.6,
+      "db_outcome": "CONFIRMED",
+      "queue_outcome_at_commit": "PENDING",
+      "fault_scheduled": "SQS_INJECTED_TIMEOUT",
+      "committed_at": "2026-11-26T12:33:27Z"
+    },
+    "outbox_durable_state": {
+      "outbox_id": "outbox#ord_fin26r2__B-02_0003",
+      "event_id": "bb17ac9d-da9c-52ff-a23d-5cc32f736e9e",
+      "dispatch_state": "CONFIRMED",
+      "publication_uncertain": false,
+      "requires_attention": false,
+      "send_attempts_reserved": 1,
+      "blocked_attempts_executed": 2,
+      "fault_remaining_blocks": 0,
+      "attempt_count": 3,
+      "sqs_api_calls": 1,
+      "last_error": "PublicationAcknowledgementUnknown",
+      "recovery_source": "dynamodb_stream",
+      "recovery_time_sec": 1.793,
+      "sqs_message_id": "99e81168-a414-4ff3-9feb-ffa340ff63b5",
+      "published_at": "2026-11-26T12:33:29Z"
+    },
+    "cloudwatch_relay_logs": [
+      {
+        "timestamp": "2026-11-26T12:33:27Z",
+        "service": "silentloss-outbox-publisher",
+        "level": "ERROR",
+        "message": "OUTBOX_PUBLISH_FAILED_DEFERRED: Durable intent retained in RETRY_WAIT for recovery",
+        "correlation_id": "corr_fin26r2_B-02_0003",
+        "order_id": "ord_fin26r2__B-02_0003",
+        "outbox_id": "outbox#ord_fin26r2__B-02_0003",
+        "trigger_source": "dynamodb_stream",
+        "error": "PublicationAcknowledgementUnknown",
+        "blocked_attempts": 2,
+        "sqs_api_calls": 0,
+        "next_attempt_at": 1795696409
+      },
+      {
+        "timestamp": "2026-11-26T12:33:29Z",
+        "service": "silentloss-outbox-publisher",
+        "level": "INFO",
+        "message": "Outbox event published and confirmed",
+        "correlation_id": "corr_fin26r2_B-02_0003",
+        "order_id": "ord_fin26r2__B-02_0003",
+        "outbox_id": "outbox#ord_fin26r2__B-02_0003",
+        "trigger_source": "dynamodb_stream",
+        "sqs_message_id": "99e81168-a414-4ff3-9feb-ffa340ff63b5",
+        "blocked_attempts": 2,
+        "sqs_api_calls": 1,
+        "recovery_time_sec": 1.793
+      }
+    ],
+    "final_business_effect": {
+      "orders_status": "FULFILLED",
+      "orders_dispatch_status": "CONFIRMED",
+      "fulfillment_id": "FULFILLMENT#PRIMARY",
+      "fulfillment_status": "COMPLETED",
+      "fulfilled_at": "2026-11-26T12:33:29Z"
+    }
+  },
+  {
+    "run_id": "fin26r2",
+    "order_id": "ord_fin26r2__B-02_0005",
+    "correlation_id": "corr_fin26r2_B-02_0005",
+    "api_ingestion": {
+      "http_status": 201,
+      "duration_ms": 999.32,
+      "db_outcome": "CONFIRMED",
+      "queue_outcome_at_commit": "PENDING",
+      "fault_scheduled": "SQS_INJECTED_TIMEOUT",
+      "committed_at": "2026-11-26T12:33:28Z"
+    },
+    "outbox_durable_state": {
+      "outbox_id": "outbox#ord_fin26r2__B-02_0005",
+      "event_id": "0ab29c24-9a7a-5f23-a8ec-19730924aa25",
+      "dispatch_state": "CONFIRMED",
+      "publication_uncertain": false,
+      "requires_attention": false,
+      "send_attempts_reserved": 1,
+      "blocked_attempts_executed": 2,
+      "fault_remaining_blocks": 0,
+      "attempt_count": 3,
+      "sqs_api_calls": 1,
+      "last_error": "PublicationAcknowledgementUnknown",
+      "recovery_source": "dynamodb_stream",
+      "recovery_time_sec": 2.8,
+      "sqs_message_id": "8098b45c-0a1d-408d-83f2-a36c886a2718",
+      "published_at": "2026-11-26T12:33:31Z"
+    },
+    "cloudwatch_relay_logs": [
+      {
+        "timestamp": "2026-11-26T12:33:29Z",
+        "service": "silentloss-outbox-publisher",
+        "level": "ERROR",
+        "message": "OUTBOX_PUBLISH_FAILED_DEFERRED: Durable intent retained in RETRY_WAIT for recovery",
+        "correlation_id": "corr_fin26r2_B-02_0005",
+        "order_id": "ord_fin26r2__B-02_0005",
+        "outbox_id": "outbox#ord_fin26r2__B-02_0005",
+        "trigger_source": "dynamodb_stream",
+        "error": "PublicationAcknowledgementUnknown",
+        "blocked_attempts": 2,
+        "sqs_api_calls": 0,
+        "next_attempt_at": 1795696411
+      },
+      {
+        "timestamp": "2026-11-26T12:33:31Z",
+        "service": "silentloss-outbox-publisher",
+        "level": "INFO",
+        "message": "Outbox event published and confirmed",
+        "correlation_id": "corr_fin26r2_B-02_0005",
+        "order_id": "ord_fin26r2__B-02_0005",
+        "outbox_id": "outbox#ord_fin26r2__B-02_0005",
+        "trigger_source": "dynamodb_stream",
+        "sqs_message_id": "8098b45c-0a1d-408d-83f2-a36c886a2718",
+        "blocked_attempts": 2,
+        "sqs_api_calls": 1,
+        "recovery_time_sec": 2.8
+      }
+    ],
+    "final_business_effect": {
+      "orders_status": "FULFILLED",
+      "orders_dispatch_status": "CONFIRMED",
+      "fulfillment_id": "FULFILLMENT#PRIMARY",
+      "fulfillment_status": "COMPLETED",
+      "fulfilled_at": "2026-11-26T12:33:31Z"
+    }
+  },
+  {
+    "run_id": "fin26r2",
+    "order_id": "ord_fin26r2__B-02_0008",
+    "correlation_id": "corr_fin26r2_B-02_0008",
+    "api_ingestion": {
+      "http_status": 201,
+      "duration_ms": 827.4,
+      "db_outcome": "CONFIRMED",
+      "queue_outcome_at_commit": "PENDING",
+      "fault_scheduled": "SQS_INJECTED_TIMEOUT",
+      "committed_at": "2026-11-26T12:33:30Z"
+    },
+    "outbox_durable_state": {
+      "outbox_id": "outbox#ord_fin26r2__B-02_0008",
+      "event_id": "578cba9b-16e1-5324-aae8-e70eb9b8bb81",
+      "dispatch_state": "CONFIRMED",
+      "publication_uncertain": false,
+      "requires_attention": false,
+      "send_attempts_reserved": 1,
+      "blocked_attempts_executed": 2,
+      "fault_remaining_blocks": 0,
+      "attempt_count": 3,
+      "sqs_api_calls": 1,
+      "last_error": "PublicationAcknowledgementUnknown",
+      "recovery_source": "dynamodb_stream",
+      "recovery_time_sec": 2.021,
+      "sqs_message_id": "fefad830-dfe0-45df-ad5f-676ec6125244",
+      "published_at": "2026-11-26T12:33:32Z"
+    },
+    "cloudwatch_relay_logs": [
+      {
+        "timestamp": "2026-11-26T12:33:30Z",
+        "service": "silentloss-outbox-publisher",
+        "level": "ERROR",
+        "message": "OUTBOX_PUBLISH_FAILED_DEFERRED: Durable intent retained in RETRY_WAIT for recovery",
+        "correlation_id": "corr_fin26r2_B-02_0008",
+        "order_id": "ord_fin26r2__B-02_0008",
+        "outbox_id": "outbox#ord_fin26r2__B-02_0008",
+        "trigger_source": "dynamodb_stream",
+        "error": "PublicationAcknowledgementUnknown",
+        "blocked_attempts": 2,
+        "sqs_api_calls": 0,
+        "next_attempt_at": 1795696412
+      },
+      {
+        "timestamp": "2026-11-26T12:33:32Z",
+        "service": "silentloss-outbox-publisher",
+        "level": "INFO",
+        "message": "Outbox event published and confirmed",
+        "correlation_id": "corr_fin26r2_B-02_0008",
+        "order_id": "ord_fin26r2__B-02_0008",
+        "outbox_id": "outbox#ord_fin26r2__B-02_0008",
+        "trigger_source": "dynamodb_stream",
+        "sqs_message_id": "fefad830-dfe0-45df-ad5f-676ec6125244",
+        "blocked_attempts": 2,
+        "sqs_api_calls": 1,
+        "recovery_time_sec": 2.021
+      }
+    ],
+    "final_business_effect": {
+      "orders_status": "FULFILLED",
+      "orders_dispatch_status": "CONFIRMED",
+      "fulfillment_id": "FULFILLMENT#PRIMARY",
+      "fulfillment_status": "COMPLETED",
+      "fulfilled_at": "2026-11-26T12:33:32Z"
+    }
+  },
+  {
+    "run_id": "fin26r2",
+    "order_id": "ord_fin26r2__B-02_0012",
+    "correlation_id": "corr_fin26r2_B-02_0012",
+    "api_ingestion": {
+      "http_status": 201,
+      "duration_ms": 1124.93,
+      "db_outcome": "CONFIRMED",
+      "queue_outcome_at_commit": "PENDING",
+      "fault_scheduled": "SQS_INJECTED_TIMEOUT",
+      "committed_at": "2026-11-26T12:33:32Z"
+    },
+    "outbox_durable_state": {
+      "outbox_id": "outbox#ord_fin26r2__B-02_0012",
+      "event_id": "c2bb0ee1-fbc5-5c24-967d-02ebbef82bb3",
+      "dispatch_state": "CONFIRMED",
+      "publication_uncertain": false,
+      "requires_attention": false,
+      "send_attempts_reserved": 1,
+      "blocked_attempts_executed": 2,
+      "fault_remaining_blocks": 0,
+      "attempt_count": 3,
+      "sqs_api_calls": 1,
+      "last_error": "PublicationAcknowledgementUnknown",
+      "recovery_source": "dynamodb_stream",
+      "recovery_time_sec": 1.859,
+      "sqs_message_id": "93dfa47d-3521-4d65-866a-5ed31ff577eb",
+      "published_at": "2026-11-26T12:33:34Z"
+    },
+    "cloudwatch_relay_logs": [
+      {
+        "timestamp": "2026-11-26T12:33:32Z",
+        "service": "silentloss-outbox-publisher",
+        "level": "ERROR",
+        "message": "OUTBOX_PUBLISH_FAILED_DEFERRED: Durable intent retained in RETRY_WAIT for recovery",
+        "correlation_id": "corr_fin26r2_B-02_0012",
+        "order_id": "ord_fin26r2__B-02_0012",
+        "outbox_id": "outbox#ord_fin26r2__B-02_0012",
+        "trigger_source": "dynamodb_stream",
+        "error": "PublicationAcknowledgementUnknown",
+        "blocked_attempts": 2,
+        "sqs_api_calls": 0,
+        "next_attempt_at": 1795696414
+      },
+      {
+        "timestamp": "2026-11-26T12:33:34Z",
+        "service": "silentloss-outbox-publisher",
+        "level": "INFO",
+        "message": "Outbox event published and confirmed",
+        "correlation_id": "corr_fin26r2_B-02_0012",
+        "order_id": "ord_fin26r2__B-02_0012",
+        "outbox_id": "outbox#ord_fin26r2__B-02_0012",
+        "trigger_source": "dynamodb_stream",
+        "sqs_message_id": "93dfa47d-3521-4d65-866a-5ed31ff577eb",
+        "blocked_attempts": 2,
+        "sqs_api_calls": 1,
+        "recovery_time_sec": 1.859
+      }
+    ],
+    "final_business_effect": {
+      "orders_status": "FULFILLED",
+      "orders_dispatch_status": "CONFIRMED",
+      "fulfillment_id": "FULFILLMENT#PRIMARY",
+      "fulfillment_status": "COMPLETED",
+      "fulfilled_at": "2026-11-26T12:33:34Z"
+    }
+  },
+  {
+    "run_id": "fin26r2",
+    "order_id": "ord_fin26r2__B-02_0015",
+    "correlation_id": "corr_fin26r2_B-02_0015",
+    "api_ingestion": {
+      "http_status": 201,
+      "duration_ms": 1019.41,
+      "db_outcome": "CONFIRMED",
+      "queue_outcome_at_commit": "PENDING",
+      "fault_scheduled": "SQS_INJECTED_TIMEOUT",
+      "committed_at": "2026-11-26T12:33:33Z"
+    },
+    "outbox_durable_state": {
+      "outbox_id": "outbox#ord_fin26r2__B-02_0015",
+      "event_id": "99bf9fb3-3087-5391-9f22-2d700f49f237",
+      "dispatch_state": "CONFIRMED",
+      "publication_uncertain": false,
+      "requires_attention": false,
+      "send_attempts_reserved": 1,
+      "blocked_attempts_executed": 2,
+      "fault_remaining_blocks": 0,
+      "attempt_count": 3,
+      "sqs_api_calls": 1,
+      "last_error": "PublicationAcknowledgementUnknown",
+      "recovery_source": "dynamodb_stream",
+      "recovery_time_sec": 1.755,
+      "sqs_message_id": "a511e5f4-cc83-4c70-a1ac-f6dcb8f2fd99",
+      "published_at": "2026-11-26T12:33:35Z"
+    },
+    "cloudwatch_relay_logs": [
+      {
+        "timestamp": "2026-11-26T12:33:33Z",
+        "service": "silentloss-outbox-publisher",
+        "level": "ERROR",
+        "message": "OUTBOX_PUBLISH_FAILED_DEFERRED: Durable intent retained in RETRY_WAIT for recovery",
+        "correlation_id": "corr_fin26r2_B-02_0015",
+        "order_id": "ord_fin26r2__B-02_0015",
+        "outbox_id": "outbox#ord_fin26r2__B-02_0015",
+        "trigger_source": "dynamodb_stream",
+        "error": "PublicationAcknowledgementUnknown",
+        "blocked_attempts": 2,
+        "sqs_api_calls": 0,
+        "next_attempt_at": 1795696415
+      },
+      {
+        "timestamp": "2026-11-26T12:33:35Z",
+        "service": "silentloss-outbox-publisher",
+        "level": "INFO",
+        "message": "Outbox event published and confirmed",
+        "correlation_id": "corr_fin26r2_B-02_0015",
+        "order_id": "ord_fin26r2__B-02_0015",
+        "outbox_id": "outbox#ord_fin26r2__B-02_0015",
+        "trigger_source": "dynamodb_stream",
+        "sqs_message_id": "a511e5f4-cc83-4c70-a1ac-f6dcb8f2fd99",
+        "blocked_attempts": 2,
+        "sqs_api_calls": 1,
+        "recovery_time_sec": 1.755
+      }
+    ],
+    "final_business_effect": {
+      "orders_status": "FULFILLED",
+      "orders_dispatch_status": "CONFIRMED",
+      "fulfillment_id": "FULFILLMENT#PRIMARY",
+      "fulfillment_status": "COMPLETED",
+      "fulfilled_at": "2026-11-26T12:33:35Z"
+    }
+  }
+]

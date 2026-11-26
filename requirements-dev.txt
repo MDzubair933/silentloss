@@ -1,0 +1,5 @@
+# SilentLoss Local Development & Testing Dependencies
+-r requirements.txt
+pytest>=8.0.0
+jsonschema>=4.20.0
+PyYAML>=6.0.0
