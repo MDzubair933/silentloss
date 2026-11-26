@@ -292,4 +292,4 @@ SilentLoss demonstrates how agent-led architectural guidance can be converted in
 
 ## License
 
-All rights reserved pending repository license selection by the project owner.
+This project is licensed under the [MIT License](LICENSE).
