@@ -7,6 +7,12 @@ An AWS reliability engineering experiment exposing silent post-commit publicatio
 
 [![Dashboard Preview — Hero Overview](docs/assets/screenshots/01-hero-overview.png)](docs/assets/screenshots/01-hero-overview.png)
 
+### Project Walkthrough
+
+[![Watch the SilentLoss video walkthrough](https://img.youtube.com/vi/awVoBcu6k2A/hqdefault.jpg)](https://www.youtube.com/watch?v=awVoBcu6k2A)
+
+[Watch the video on YouTube](https://www.youtube.com/watch?v=awVoBcu6k2A)
+
 ### Core Claims & Verified Findings
 
 - **Silent Loss Eliminated (6.25% → 0.00%):** Overall silent loss dropped from 6.25% (10/160) to 0.00% (0/160) across 160 live committed AWS orders, eliminating the 25.00% (10/40) loss in timeout scenario `B-02`.
